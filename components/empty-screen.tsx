@@ -24,10 +24,10 @@ export function EmptyScreen() {
     <div className="mx-auto max-w-2xl px-4">
       <div className="flex flex-col gap-2 rounded-lg border bg-background p-8">
         <h1 className="text-lg font-semibold">
-          Online CBT session: Abe
+          Online CBT session: Jane
         </h1>
         <p className="leading-normal text-muted-foreground">
-          In this session, you will talk to a client named Abe. You goal is to indentify the cognitive conceptualization diagram of Abe by communicating with him and using CBT skills.
+          In this session, you will talk to a client named Jane. You goal is to indentify the cognitive conceptualization diagram of Jane by communicating with him and using CBT skills.
         </p>
       </div>
     </div>

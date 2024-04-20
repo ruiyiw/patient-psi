@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Alex",
+        "history": "The patient has a history of substance abuse and has been through rehab to overcome it. He has had issues with his family, particularly with his mother, where he has felt rejected and emotionally neglected. He has struggled with obesity since childhood, which has affected his self-esteem and body image. He also has a history of being victimized and bullied due to his weight.",
+        "core_belief": "Helpless belief: I am trapped/victim/out of control \nUnlovable belief: I am undesirable, unwanted/unlovable.",
+        "intermediate_belief": "Helpless: I'm just not very good at handling stress and I have poor self-control, which is why I need to not put myself in stressful situations. \n Unlovable: If I show my true self, people will reject me the way my mother rejected me.",
+        "intermediate_belief_depression": "Helpless: There's nothing I can do to change my situation, bad things just happen to me. \nUnlovable: I don't deserve to be happy, so why even try to stay clean?",
+        "coping_strategies": "The patient turns to substances as a coping strategy to escape his feelings. The patient has adopted avoidance as a coping strategy by distancing himself from his family to reduce exposure to negativity and conflict. He has been staying at his girlfriend's place to avoid his parents' influence and the associated stress. He also uses yelling and stepping away from situations to manage his low self esteem. He has started scheduling pleasant activities and planning his day ahead of time in order to maintain a sense of control over his emotions and circumstances.",
+        "ccd_diagram": [
+            {
+                "situation": "Alex's cousin invited him to attend his upcoming wedding.",
+                "auto_thought": "It will be stressful and negative; people will ask me questions I cannot answer or don't want to answer; my mum would be ashamed of me and critical of me as always; They don't want me there anyway, nobody likes me in this family.",
+                "emotion": "sad/down/lonely/unhappy, anxious/worried/fearful/scared/tense",
+                "behavior": "Ignored the invitation and did not respond to the RSVP request. Ignored phone calls from family."
+            },
+            {
+                "situation": "I missed my alarm and work up late for work.",
+                "auto_thought": "Why can't I even do this little this right? My whole day is written off now, I might as well not do anything.",
+                "emotion": "angry/mad/irritated/annoyed, anxious/worried/fearful/scared/tense",
+                "behavior": "Called in sick. Got drunk in the morning and had a fight with girlfriend."
+            },
+            {
+                "situation": "Was going to pick up girlfriend after work but it started raining just as he was about to walk out.",
+                "auto_thought": "Why does this always happen to me? I'm a victim of bad luck.",
+                "emotion": "angry/mad/irritated/annoyed, ashamed/embarrassed/humiliated",
+                "behavior": "Curses at the rain. Gave an excuse to girlfriend for not picking her up. Went back inside and had a beer. Calmed down and felt remorseful."
+            }
+        ]
+    }
+]

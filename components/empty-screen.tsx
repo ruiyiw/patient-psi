@@ -4,6 +4,10 @@ import { Button } from '@/components/ui/button'
 import { ExternalLink } from '@/components/external-link'
 import { IconArrowRight } from '@/components/ui/icons'
 
+import { useState, useEffect } from 'react';
+import { PatientTypeMenu } from '@/components/patient-type-menu';
+
+
 const exampleMessages = [
   {
     heading: 'Explain technical concepts',
@@ -19,16 +23,16 @@ const exampleMessages = [
   }
 ]
 
+
 export function EmptyScreen() {
+
   return (
     <div className="mx-auto max-w-2xl px-4">
       <div className="flex flex-col gap-2 rounded-lg border bg-background p-8">
-        <h1 className="text-lg font-semibold">
-          Online CBT session: Jane
+        <h1 className="text-xl font-semibold">
+          CBT session with a simulated client powered by AI
         </h1>
-        <p className="leading-normal text-muted-foreground">
-          In this session, you will talk to a client named Jane. You goal is to indentify the cognitive conceptualization diagram of Jane by communicating with him and using CBT skills.
-        </p>
+        <PatientTypeMenu></PatientTypeMenu>
       </div>
     </div>
   )

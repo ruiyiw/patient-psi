@@ -26,8 +26,7 @@ import { StocksSkeleton } from '@/components/stocks/stocks-skeleton'
 import { Stocks } from '@/components/stocks/stocks'
 import { StockSkeleton } from '@/components/stocks/stock-skeleton'
 import {
-  formatNumber,
-  runAsyncFnWithoutBlocking,
+
   sleep,
   nanoid
 } from '@/lib/utils'
@@ -36,91 +35,15 @@ import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
 import { Chat } from '@/lib/types'
 import { auth } from '@/auth'
 
+import { getPrompt } from '@/app/api/prompt/route'
+
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || ''
 })
 
-async function confirmPurchase(symbol: string, price: number, amount: number) {
-  'use server'
 
-  const aiState = getMutableAIState<typeof AI>()
-
-  const purchasing = createStreamableUI(
-    <div className="inline-flex items-start gap-1 md:items-center">
-      {spinner}
-      <p className="mb-2">
-        Purchasing {amount} ${symbol}...
-      </p>
-    </div>
-  )
-
-  const systemMessage = createStreamableUI(null)
-
-  runAsyncFnWithoutBlocking(async () => {
-    await sleep(1000)
-
-    purchasing.update(
-      <div className="inline-flex items-start gap-1 md:items-center">
-        {spinner}
-        <p className="mb-2">
-          Purchasing {amount} ${symbol}... working on it...
-        </p>
-      </div>
-    )
-
-    await sleep(1000)
-
-    purchasing.done(
-      <div>
-        <p className="mb-2">
-          You have successfully purchased {amount} ${symbol}. Total cost:{' '}
-          {formatNumber(amount * price)}
-        </p>
-      </div>
-    )
-
-    systemMessage.done(
-      <SystemMessage>
-        You have purchased {amount} shares of {symbol} at ${price}. Total cost ={' '}
-        {formatNumber(amount * price)}.
-      </SystemMessage>
-    )
-
-    aiState.done({
-      ...aiState.get(),
-      messages: [
-        ...aiState.get().messages.slice(0, -1),
-        {
-          id: nanoid(),
-          role: 'function',
-          name: 'showStockPurchase',
-          content: JSON.stringify({
-            symbol,
-            price,
-            defaultAmount: amount,
-            status: 'completed'
-          })
-        },
-        {
-          id: nanoid(),
-          role: 'system',
-          content: `[User has purchased ${amount} shares of ${symbol} at ${price}. Total cost = ${amount * price
-            }]`
-        }
-      ]
-    })
-  })
-
-  return {
-    purchasingUI: purchasing.value,
-    newMessage: {
-      id: nanoid(),
-      display: systemMessage.value
-    }
-  }
-}
-
-async function submitUserMessage(content: string) {
+async function submitUserMessage(content: string, type: string) {
   'use server'
 
   const aiState = getMutableAIState<typeof AI>()
@@ -132,7 +55,7 @@ async function submitUserMessage(content: string) {
       {
         id: nanoid(),
         role: 'user',
-        content
+        content,
       }
     ]
   })
@@ -147,49 +70,7 @@ async function submitUserMessage(content: string) {
     messages: [
       {
         role: 'system',
-        content: `
-        Imagine you are Jane, a patient who has been suffering from (potential) mental health issues. You have been attending sessions for several weeks. Your task is to act and speak as Jane would with a therapist during a cognitive behavioral therapy (CBT) session. You should try your best to align with Jane's background information in the 'Relevant history' field. Your thought process should strictly follow the cognitive conceptualization diagram provided in the 'Cognitive Conceptualization Diagram' field. However, you must not directly dispose any text from the diagram because a real patient does not think about things following the diagram. 
-
-        Patient's history: 
-        
-        Jane has had significant life events that have impacted her current state, including losing her retirement and inheritance through the family's loss, which has led to financial concerns and the need to continue working potentially until an old age, or change job of higher pays, or any other ways to make money. Additionally, there are underlying tensions and unresolved feelings related to their family, particularly her mother and father.
-
-        Cognitive Conceptualization Diagram: 
-
-        Core Beliefs: 
-        Helpless belief: I am helpless/incompetent/failure, loser
-
-        Intermediate Beliefs: 
-        I need to rely on family and friends to support my life. I am not able to handle anything out of my expectation by myself. My family and friends are supposed to always support me.
-
-        Intermediate Beliefs during Depression: 
-        I cannot accept the fact that I lost the financial support from my family. I just cannot support myself. I am a failure that cannot be even independent. My future is hopeless.  
-
-        Coping Strategies: 
-        Questioning the self; try to take responsibilities and tasks for a sense of control; Show avoidance of making decisions or taking challenges in life, which in fact further increases anxious feelings. 
-
-        You are going to be asked about your past week. Please make a conversation with the therapist regarding the following situation and behavior. The emotion and automatic thoughts are for your reference. Please do not disclose anything about cognitive conceptualization diagram directly; instead, you should act based on the diagram so that the therapist can infer from your talk.
-        
-        Situation: Reflecting on the financial loss due to family's mistake.
-        
-        Authomatic thoughts: It's unfair that I can't retire. Why this happened to me? My family are supposed to support me all the time. I probably cannot support myself, I don't know what to do. 
-
-        Emotion: angry/mad/irritated/annoyed, anxious/worried/fearful/scared/tense.
-        
-        Behavior: Expressing anger toward the family and anxiety about ongoing responsibilities.
-
-        In the following conversation, you should start simulating Jane during therapy session, and the user is a therapist. 
-        You must follow the following rules:
-
-        1. You should try your best to act like a hostile patient: 1) you may exhibit anger, aggression, or resistance towards the therapist or the therapeutic process, 2) you may be confrontational, challenging, or dismissive of the therapist's suggestions and interventions, 3) you  may have difficulty trusting the therapist and forming a therapeutic alliance, 4) you may be prone to arguing, criticizing, or expressing frustration during therapy sessions.
-
-        2. You should emulate the demeanor and responses of a genuine patient, ensuring authenticity in its interactions. 
-
-        3. A real patient often requires extensive dialogue before delving into core issues. It's challenging for therapists to pinpoint the patient's genuine thoughts and emotions. Thus, you should mimic this gradual revelation of deeper concerns.
-        
-
-        Now you are patient Jane. You must navigate your conversation like Jane no matter what the other side asks. Each turn, you must generate no more than 5 sentences. If the user asks "Hi", then you should start your conversation as the patient. 
-        `
+        content: await getPrompt()
       },
       ...aiState.get().messages.map((message: any) => ({
         role: message.role,
@@ -212,7 +93,7 @@ async function submitUserMessage(content: string) {
             {
               id: nanoid(),
               role: 'assistant',
-              content
+              content,
             }
           ]
         })
@@ -251,7 +132,7 @@ async function submitUserMessage(content: string) {
                 id: nanoid(),
                 role: 'function',
                 name: 'listStocks',
-                content: JSON.stringify(stocks)
+                content: JSON.stringify(stocks),
               }
             ]
           })
@@ -292,7 +173,7 @@ async function submitUserMessage(content: string) {
                 id: nanoid(),
                 role: 'function',
                 name: 'showStockPrice',
-                content: JSON.stringify({ symbol, price, delta })
+                content: JSON.stringify({ symbol, price, delta }),
               }
             ]
           })
@@ -329,7 +210,7 @@ async function submitUserMessage(content: string) {
                 {
                   id: nanoid(),
                   role: 'system',
-                  content: `[User has selected an invalid amount]`
+                  content: `[User has selected an invalid amount]`,
                 }
               ]
             })
@@ -349,7 +230,7 @@ async function submitUserMessage(content: string) {
                   symbol,
                   price,
                   numberOfShares
-                })
+                }),
               }
             ]
           })
@@ -399,7 +280,7 @@ async function submitUserMessage(content: string) {
                 id: nanoid(),
                 role: 'function',
                 name: 'getEvents',
-                content: JSON.stringify(events)
+                content: JSON.stringify(events),
               }
             ]
           })
@@ -439,8 +320,7 @@ export type UIState = {
 
 export const AI = createAI<AIState, UIState>({
   actions: {
-    submitUserMessage,
-    confirmPurchase
+    submitUserMessage
   },
   initialUIState: [],
   initialAIState: { chatId: nanoid(), messages: [] },

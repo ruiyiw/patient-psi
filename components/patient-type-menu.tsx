@@ -6,6 +6,9 @@ import { useState } from "react";
 
 export const patientTypes = [
     {
+        type: "plain", content: ""
+    },
+    {
         type: "hostile", content: "You should try your best to act like a hostile patient: 1) you must exhibit anger, aggression, or resistance towards the therapist or the therapeutic process, 2) you must be confrontational, challenging, or dismissive of the therapist's suggestions and interventions, 3) you  must have difficulty trusting the therapist and forming a therapeutic alliance, 4) you must be prone to arguing, criticizing, or expressing frustration during therapy sessions."
     },
     {
@@ -23,6 +26,9 @@ export const patientTypes = [
 ];
 
 export const patientTypeDescriptions = [
+    {
+        type: "plain", content: "The client is designed as a standard patient who has no specific types."
+    },
     {
         type: "hostile", content: "A hostile client may 1) exhibit anger, aggression, or resistance towards the therapist or the therapeutic process, 2) be confrontational, challenging, or dismissive of the therapist's suggestions and interventions, 3) have difficulty trusting the therapist and forming a therapeutic alliance, 4) be prone to arguing, criticizing, or expressing frustration during therapy sessions."
     },

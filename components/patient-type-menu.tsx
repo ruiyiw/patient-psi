@@ -2,17 +2,18 @@
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 
+import { useEffect, useState } from "react";
 import { patientTypes, patientTypeDescriptions } from "@/app/api/data/patient-types"
 
-async function fetchPatientName(setSelectedPatientName: (name: string) => void) {
+async function fetchPatientName(setSelectedPatientName: (name: string) => void, setIsStarted: (isStarted: boolean) => void) {
     try {
         fetch('/api/prompt')
             .then(response => response.json()
                 .then(data => {
-                    console.log(data.name);
                     setSelectedPatientName(data.name);
+                    setIsStarted(true);
+                    console.log(data.name)
                 })
             ).catch(error => {
                 console.log(error);
@@ -50,7 +51,7 @@ const PatientTypeDropdownList: React.FC<PatientTypeListProps> = ({ typeList, sel
                 align="start"
                 className="focus:outline-none] absolute z-10 mt-2 w-56 origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5"
             >
-                <div className="max-h-40 overflow-y-auto">
+                <div className="max-h-90 overflow-y-auto">
                     {typeList.map((choice, index) => (
                         <DropdownMenuItem key={index} className="flex-col items-start" onClick={() => handleChoiceClick(choice)}>
                             <div className="text-sm font-medium">{choice}</div>
@@ -62,25 +63,34 @@ const PatientTypeDropdownList: React.FC<PatientTypeListProps> = ({ typeList, sel
     );
 }
 
-export function PatientTypeMenu() {
+interface PatientTypeMenuProps {
+    onStartedChange: (isStarted: boolean) => void;
+    onSetSelectedPatientName: (selectedPatientName: string) => void;
+}
+
+export function PatientTypeMenu({ onStartedChange, onSetSelectedPatientName }: PatientTypeMenuProps) {
     const patientTypeListValues: string[] = patientTypes.map(({ type }) => type);
 
     const [selectedType, setSelectedType] = useState('Client Types');
-    const [isSubmitted, setIsSubmitted] = useState(false);
     const [selectedTypeDescription, setSelectedTypeDescription] = useState('');
     const [isStarted, setIsStarted] = useState(false);
-    const [selectedPatientName, setSelectedPatentName] = useState('');
+    const [selectedPatientName, setSelectedPatientName] = useState('');
+
+    useEffect(() => {
+        onStartedChange(isStarted);
+    }, [isStarted, onStartedChange]);
+
+    useEffect(() => {
+        onSetSelectedPatientName(selectedPatientName);
+    }, [selectedPatientName, onSetSelectedPatientName]);
+
 
     const handleChoiceClick = (choice: string) => {
         setSelectedType(choice);
-    }
-
-    const handleSubmitButtonClick = () => {
-        const typeDescription = patientTypeDescriptions.find((description) => description.type === selectedType);
+        const typeDescription = patientTypeDescriptions.find((description) => description.type === choice);
         if (typeDescription) {
             setSelectedTypeDescription(typeDescription.content);
         }
-        setIsSubmitted(true);
     }
 
     const handleStartButtonClick = async () => {
@@ -104,22 +114,20 @@ export function PatientTypeMenu() {
                 console.log(error);
             }
         }
-        fetchPatientName(setSelectedPatentName);
-        setIsStarted(true);
+        fetchPatientName(setSelectedPatientName, setIsStarted);
 
     }
-
 
 
     return (
         <div>
             {!isStarted ? (<div>
                 <p className="leading-normal pt-4 font-medium text-zinc-500">
-                    In this CBT session, you will talk to a client simulated by AI with a virtual patient profile. You goal is to indentify the cognitive conceptualization diagram of the patient by communicating with them and using CBT skills.
+                    In this CBT session, you will talk to a client simulated by AI with a virtual patient profile. You goal is to indentify the cognitive conceptualization diagram of the client by communicating with them and using CBT skills.
                 </p>
 
                 <p className="leading-normal pt-4 font-medium text-zinc-500">
-                    We provide five typical client types, including "hostile", "verbose", "guarded", "go off on tangents", and "ingratiating". Please select one patient type and press the submit button to start the conversation.
+                    We provide 5 typical client types and one plain client without any types. Please select a patient type to see the description.
                 </p>
                 <div className="max-w-6xl px-0">
                     <div>
@@ -128,16 +136,9 @@ export function PatientTypeMenu() {
                             <div>
                                 <PatientTypeDropdownList typeList={patientTypeListValues} selectedType={selectedType} handleChoiceClick={handleChoiceClick} ></PatientTypeDropdownList>
                             </div>
-                            <div className="ml-10">
-                                <button onClick={handleSubmitButtonClick}
-                                    className="flex h-[35px] w-[135px] items-center justify-center rounded-md bg-black text-sm font-semibold text-white dark:bg-white dark:text-black"
-                                >
-                                    See description
-                                </button>
-                            </div>
                         </div>
                     </div>
-                    {isSubmitted && selectedTypeDescription && (
+                    {selectedType !== '' && (
                         <div>
                             <p className="block pt-5 font-medium leading-6">
                                 {selectedTypeDescription}
@@ -154,11 +155,8 @@ export function PatientTypeMenu() {
                         </div>
                     )}
                 </div>
-            </div>) : (<div>
-                <p className="leading-normal pt-4 font-medium text-black dark:text-white">
-                    Now you may start your session with client <b>{selectedPatientName}</b>. Please start the session by entering the first greeting to <b>{selectedPatientName}</b> in the textbox below.
-                </p>
-            </div>)
+            </div>) : (<>
+            </>)
             }
         </div>
     )

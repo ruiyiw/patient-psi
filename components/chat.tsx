@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 import { StartSession } from './start-session'
 import { Sidebar } from './sidebar'
 import { DiagramList } from './diagram-list'
+import { PatientProfile, initialProfile } from '@/app/api/data/patient-profiles'
 
 export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: Message[]
@@ -31,7 +32,8 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
 
   const [_, setNewChatId] = useLocalStorage('newChatId', id)
   const [isStarted, setIsStarted] = useState(false);
-  const [selectedPatientName, setSelectedPatientName] = useState('');
+  const [patientProfile, setPatientProfile] = useState<PatientProfile>(initialProfile);
+
 
   useEffect(() => {
     if (session?.user) {
@@ -65,9 +67,11 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
     setIsStarted(isStarted);
   }
 
-  const handleSetPatientName = (selectedPatientName: string) => {
-    setSelectedPatientName(selectedPatientName);
+  const handleSetPatientProfile = (patientProfile: PatientProfile) => {
+    setPatientProfile(patientProfile);
+    console.log(patientProfile);
   }
+
 
   return (
     <>
@@ -93,7 +97,9 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
           <>
             {!isStarted ? (
               <div className={cn('pb-[200px] pt-4 md:pt-10', className)} ref={messagesRef}>
-                <StartSession onStartedChange={handleStartedChange} onSetSelectedPatientName={handleSetPatientName} />
+                <StartSession
+                  onStartedChange={handleStartedChange}
+                  onSetPatientProfile={handleSetPatientProfile} />
               </div>
             ) : (
               <>
@@ -104,7 +110,7 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
                         Session Begins
                       </h1>
                       <p className="leading-normal pt-4 font-medium text-black dark:text-white">
-                        Now you may start your session with client <b>{selectedPatientName}</b>. Please start the session by entering the first greeting to <b>{selectedPatientName}</b> in the textbox below.
+                        Now you may start your session with client <b>{patientProfile.name}</b>. Please start the session by entering the first greeting to <b>{patientProfile.name}</b> in the textbox below.
                       </p>
                     </div>
                   </div>
@@ -124,7 +130,7 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
       {messages.length ? (
         <Sidebar className="peer absolute inset-y-0 z-30 hidden translate-x-full right-0 border-l bg-muted duration-300 ease-in-out data-[state=open]:translate-x-0 lg:flex lg:w-[400px] xl:w-[600px]">
           {/* @ts-ignore */}
-          <DiagramList userId={session.user.id} />
+          <DiagramList userId={session.user.id} chatId={id} />
         </Sidebar>) : (<></>)}
     </>
   );

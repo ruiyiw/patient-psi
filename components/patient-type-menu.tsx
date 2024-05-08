@@ -5,15 +5,17 @@ import { Button } from "@/components/ui/button";
 
 import { useEffect, useState } from "react";
 import { patientTypes, patientTypeDescriptions } from "@/app/api/data/patient-types"
+import { PatientProfile, initialProfile } from '@/app/api/data/patient-profiles'
 
-async function fetchPatientName(setSelectedPatientName: (name: string) => void, setIsStarted: (isStarted: boolean) => void) {
+async function fetchPatientProfile(
+    setIsStarted: (isStarted: boolean) => void,
+    setPatientProfile: (patientProfile: PatientProfile) => void) {
     try {
         fetch('/api/prompt')
             .then(response => response.json()
                 .then(data => {
-                    setSelectedPatientName(data.name);
                     setIsStarted(true);
-                    console.log(data.name)
+                    setPatientProfile(data.profile);
                 })
             ).catch(error => {
                 console.log(error);
@@ -65,24 +67,25 @@ const PatientTypeDropdownList: React.FC<PatientTypeListProps> = ({ typeList, sel
 
 interface PatientTypeMenuProps {
     onStartedChange: (isStarted: boolean) => void;
-    onSetSelectedPatientName: (selectedPatientName: string) => void;
+    onSetPatientProfile: (selectedPatientName: PatientProfile) => void;
 }
 
-export function PatientTypeMenu({ onStartedChange, onSetSelectedPatientName }: PatientTypeMenuProps) {
+export function PatientTypeMenu({ onStartedChange, onSetPatientProfile }: PatientTypeMenuProps) {
     const patientTypeListValues: string[] = patientTypes.map(({ type }) => type);
 
     const [selectedType, setSelectedType] = useState('Client Types');
     const [selectedTypeDescription, setSelectedTypeDescription] = useState('');
     const [isStarted, setIsStarted] = useState(false);
-    const [selectedPatientName, setSelectedPatientName] = useState('');
+    const [patientProfile, setPatientProfile] = useState<PatientProfile>(initialProfile);
 
     useEffect(() => {
         onStartedChange(isStarted);
     }, [isStarted, onStartedChange]);
 
     useEffect(() => {
-        onSetSelectedPatientName(selectedPatientName);
-    }, [selectedPatientName, onSetSelectedPatientName]);
+        onSetPatientProfile(patientProfile);
+    }, [patientProfile, onSetPatientProfile]);
+
 
 
     const handleChoiceClick = (choice: string) => {
@@ -114,7 +117,7 @@ export function PatientTypeMenu({ onStartedChange, onSetSelectedPatientName }: P
                 console.log(error);
             }
         }
-        fetchPatientName(setSelectedPatientName, setIsStarted);
+        fetchPatientProfile(setIsStarted, setPatientProfile);
 
     }
 

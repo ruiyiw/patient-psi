@@ -9,6 +9,7 @@ import { PatientTypeMenu } from '@/components/patient-type-menu';
 
 import { useUIState, useAIState } from 'ai/rsc';
 import React from 'react'
+import { PatientProfile, initialProfile } from '@/app/api/data/patient-profiles'
 
 
 const exampleMessages = [
@@ -28,20 +29,20 @@ const exampleMessages = [
 
 interface StartSessionProps {
     onStartedChange: (isStarted: boolean) => void;
-    onSetSelectedPatientName: (selectedPatientName: string) => void;
+    onSetPatientProfile: (selectedPatientName: PatientProfile) => void;
 }
 
-export function StartSession({ onStartedChange, onSetSelectedPatientName }: StartSessionProps) {
+export function StartSession({ onStartedChange, onSetPatientProfile }: StartSessionProps) {
     const [isStarted, setIsStarted] = useState(false);
-    const [selectedPatientName, setSelectedPatientName] = useState('');
+    const [patientProfile, setPatientProfile] = useState<PatientProfile>(initialProfile);
 
     const handleStartedChange = (isStarted: boolean) => {
         setIsStarted(isStarted);
     }
 
-    const handleSetSelectedPatientName = (selectedPatientName: string) => {
-        setSelectedPatientName(selectedPatientName);
-        console.log(selectedPatientName);
+    const handleSetdPatientProfile = (patientProfile: PatientProfile) => {
+        setPatientProfile(patientProfile);
+        console.log(patientProfile);
     }
 
     useEffect(() => {
@@ -49,8 +50,10 @@ export function StartSession({ onStartedChange, onSetSelectedPatientName }: Star
     }, [isStarted, onStartedChange]);
 
     useEffect(() => {
-        onSetSelectedPatientName(selectedPatientName);
-    }, [selectedPatientName, onSetSelectedPatientName])
+        onSetPatientProfile(patientProfile);
+    }, [patientProfile, onSetPatientProfile]);
+
+
 
     return (
         <div className="mx-auto max-w-2xl px-4">
@@ -58,7 +61,9 @@ export function StartSession({ onStartedChange, onSetSelectedPatientName }: Star
                 <h1 className="text-xl font-semibold">
                     CBT session with a simulated client powered by AI
                 </h1>
-                <PatientTypeMenu onStartedChange={handleStartedChange} onSetSelectedPatientName={handleSetSelectedPatientName}></PatientTypeMenu>
+                <PatientTypeMenu
+                    onStartedChange={handleStartedChange}
+                    onSetPatientProfile={handleSetdPatientProfile} ></PatientTypeMenu>
             </div>
         </div >
     )

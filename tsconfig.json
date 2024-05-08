@@ -36,7 +36,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/api/data/patient-types.jsx"
+    "app/api/data/patient-types.jsx",
+    "api/**/*"
   ],
   "exclude": [
     "node_modules"

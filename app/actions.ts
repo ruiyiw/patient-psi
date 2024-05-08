@@ -5,7 +5,8 @@ import { redirect } from 'next/navigation'
 import { kv } from '@vercel/kv'
 
 import { auth } from '@/auth'
-import { type Chat } from '@/lib/types'
+import { CCDResult, CCDTruth, type Chat } from '@/lib/types'
+import { pipe } from 'framer-motion'
 
 export async function getChats(userId?: string | null) {
   if (!userId) {
@@ -153,4 +154,70 @@ export async function getMissingKeys() {
   return keysRequired
     .map(key => (process.env[key] ? '' : key))
     .filter(key => key !== '')
+}
+
+
+export async function getCCDResult(userId: string, chatId: string) {
+  const ccdResultKey = `ccdResult:${userId}:${chatId}`;
+  const ccdResult = await kv.hgetall<CCDResult>(ccdResultKey);
+
+  if (ccdResult && Object.keys(ccdResult).length > 0) {
+    return ccdResult;
+  } else {
+    return null;
+  }
+}
+
+
+export async function saveCCDResult(ccdResult: CCDResult) {
+  const session = await auth()
+
+  if (session && session.user) {
+    const pipeline = kv.pipeline()
+    const ccdResultKey = `ccdResult:${ccdResult.userId}:${ccdResult.chatId}`;
+    pipeline.hmset(ccdResultKey, ccdResult)
+    pipeline.zadd(`user:ccdResults:${ccdResult.userId}`, {
+      score: Date.now(),
+      member: ccdResultKey,
+    });
+    await pipeline.exec()
+  } else {
+    return
+  }
+}
+
+
+export async function getCCDTruth(userId: string, chatId: string) {
+  const ccdTruthKey = `ccdTruth:${userId}:${chatId}`;
+  const ccdTruth = await kv.hgetall<CCDTruth>(ccdTruthKey);
+
+  if (ccdTruth && Object.keys(ccdTruth).length > 0) {
+    return ccdTruth;
+  } else {
+    return null;
+  }
+}
+
+
+export async function saveCCDTruth(ccdTruth: CCDTruth) {
+  const session = await auth()
+
+  if (session && session.user) {
+    const pipeline = kv.pipeline()
+    const ccdTruthKey = `ccdTruth:${ccdTruth.userId}:${ccdTruth.chatId}`;
+    pipeline.hmset(ccdTruthKey, ccdTruth)
+    pipeline.zadd(`user:ccdTruth:${ccdTruth.userId}`, {
+      score: Date.now(),
+      member: ccdTruthKey,
+    });
+    await pipeline.exec()
+  } else {
+    return
+  }
+}
+
+
+export async function getProfileData() {
+  const key = "alex_data"
+
 }

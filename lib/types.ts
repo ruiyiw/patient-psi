@@ -10,11 +10,57 @@ export interface Chat extends Record<string, any> {
   sharePath?: string
 }
 
+export interface CCDResult extends Record<string, any> {
+  userId: string;
+  chatId: string;
+  createdAt: Date;
+  relatedHistory: string;
+  // checkHelpless: {
+  //   id: string;
+  //   label: string;
+  // }[];
+  // checkUnlovable: {
+  //   id: string;
+  //   label: string;
+  // }[];
+  // checkWorthless: {
+  //   id: string;
+  //   label: string;
+  // }[];
+  intermediateBelief: string;
+  intermediateBeliefDepression: string;
+  copingStrategies: string;
+  situation: string;
+  autoThought: string;
+  // checkEmotion: {
+  //   id: string;
+  //   label: string;
+  // }[];
+  behavior: string;
+}
+
+export interface CCDTruth extends Record<string, any> {
+  userId: string;
+  chatId: string;
+  createdAt: Date;
+  relatedHistory: string;
+  Helpless: [string];
+  Unlovable: [string];
+  Worthless: [string];
+  intermediateBelief: string;
+  intermediateBeliefDepression: string;
+  copingStrategies: string;
+  situation: string;
+  autoThought: string;
+  Emotion: [string];
+  behavior: string;
+}
+
 export type ServerActionResult<Result> = Promise<
   | Result
   | {
-      error: string
-    }
+    error: string
+  }
 >
 
 export interface Session {

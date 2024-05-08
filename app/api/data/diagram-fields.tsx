@@ -13,3 +13,14 @@ export const diagramDescriptionMapping: { [key: string]: string } = {
     'Emotion(s)': 'Please select any emotions experienced by the client in relation to the situation and their automatic thoughts.',
     'Behavior(s)': 'Please describe the client\'s behavioral responses and actions taken as a result of their automatic thoughts and emotions in the given situation.',
 };
+
+
+export const diagramTruthMapping = {
+    'Related History': 'relatedHistory',
+    'Intermediate Belief(s)': 'intermediateBelief',
+    'Intermediate Belief(s) During Depression': 'intermediateBeliefDepression',
+    'Coping Strategies': 'copingStrategies',
+    'The Situation': "situation",
+    'Automatic Thought(s)': 'autoThought',
+    'Behavior(s)': 'behavior'
+}

@@ -4,12 +4,14 @@ import * as React from 'react'
 import { useEffect, useState } from 'react';
 
 import { CheckboxReactHookFormMultiple } from './diagram-checkbox'
-import { diagramTitles, diagramTitlesCCD, diagramDescriptionMapping, diagramTruthMapping } from '@/app/api/data/diagram-fields'
+import { diagramRelated, diagramCCD, diagramDescriptionMapping, diagramTitleMapping } from '@/app/api/data/diagram-fields'
 import { sessionInstructions } from '@/app/api/data/session-instruction'
 import { CCDResult, CCDTruth } from '@/lib/types'
 import { getCCDResult, getCCDTruth, saveCCDResult, saveCCDTruth } from '@/app/actions'
 import { PatientProfile, initialProfile } from '@/app/api/data/patient-profiles'
 
+
+// Before
 async function fetchPatientProfile(
     setPatientProfile: (patientProfile: PatientProfile) => void) {
     try {
@@ -33,15 +35,68 @@ interface DiagramListProps {
     patientProfile: PatientProfile
 }
 
+export type InputValues = {
+    [key: string]: string | { id: string; label: string }[];
+    checkedHelpless: { id: string; label: string }[];
+    checkedUnlovable: { id: string; label: string }[];
+    checkedWorthless: { id: string; label: string }[];
+    checkedEmotion: { id: string; label: string }[];
+};
 
 export function DiagramList({ userId, chatId }: DiagramListProps) {
     const [patientProfile, setPatientProfile] = useState<PatientProfile | null>(initialProfile);
     const [isFetchedPatientProfile, setIsFetchedPatientProfile] = useState(false);
     const [savedCCDTruth, setSavedCCDTruth] = useState<CCDTruth | null>(null);
+    const [savedCCDResult, setSavedCCDResult] = useState<CCDResult | null>(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [inputValues, setInputValues] = useState(
-        Object.fromEntries([...diagramTitles, ...diagramTitlesCCD].map(name => [name, '']))
-    );
+    const initialInputValues: InputValues = {
+        ...Object.fromEntries([...diagramRelated, ...diagramCCD].map(name => [name, ''])),
+        checkedHelpless: [],
+        checkedUnlovable: [],
+        checkedWorthless: [],
+        checkedEmotion: [],
+    };
+
+    const [inputValues, setInputValues] = useState<InputValues>(initialInputValues);
+    const [isLoading, setIsLoading] = useState(true);
+
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            if (!isFetchedPatientProfile) {
+                await fetchPatientProfile(setPatientProfile);
+                setIsFetchedPatientProfile(true);
+            }
+        };
+
+        fetchProfile();
+    }, [isFetchedPatientProfile]);
+
+
+    useEffect(() => {
+        const fetchSavedCCDResult = async () => {
+            setIsLoading(true);
+            const savedResult = await getCCDResult(userId, chatId);
+            if (savedResult) {
+                setSavedCCDResult(savedResult);
+                setInputValues(prevValues => ({
+                    ...prevValues,
+                    ...savedResult,
+                }));
+                console.log("show previous ccdresult");
+            }
+            setIsLoading(false);
+        };
+
+        fetchSavedCCDResult();
+    }, [userId, chatId]);
+
+
+
+    if (isLoading) {
+        return <div>Loading...</div>;  // or any loading indicator
+    }
+
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -60,50 +115,69 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
             ...prevValues,
             [name]: event.target.value,
         }));
+        console.log(inputValues);
+    };
+
+    const handleCheckboxChange = (category: string, checkedValues: { id: string; label: string }[]) => {
+        setInputValues((prevValues) => ({
+            ...prevValues,
+            [`checked${category}`]: checkedValues,
+        }));
     };
 
 
     const handleSubmit = async () => {
         try {
-            console.log(patientProfile);
-            const ccdTruth: CCDTruth = {
-                userId: userId,
-                chatId: chatId,
-                createdAt: new Date(),
-                relatedHistory: patientProfile?.history ?? '',
-                Helpless: patientProfile?.helpless_belief ?? [''],
-                Unlovable: patientProfile?.unlovable_belief ?? [''],
-                Worthless: patientProfile?.worthless_belief ?? [''],
-                intermediateBelief: patientProfile?.intermediate_belief ?? '',
-                intermediateBeliefDepression: patientProfile?.intermediate_belief_depression ?? '',
-                copingStrategies: patientProfile?.coping_strategies ?? '',
-                situation: patientProfile?.situation ?? '',
-                autoThought: patientProfile?.auto_thought ?? '',
-                Emotion: patientProfile?.emotion ?? [''],
-                behavior: patientProfile?.behavior ?? '',
+            // Check if ccdTruth already exists in KV database
+            const existingCCDTruth = await getCCDTruth(userId, chatId);
+
+            if (!existingCCDTruth) {
+                // If ccdTruth is not in database, save ccdTruth according to current patientProfile
+                const ccdTruth: CCDTruth = {
+                    userId: userId,
+                    chatId: chatId,
+                    createdAt: new Date(),
+                    relatedHistory: patientProfile?.history ?? '',
+                    Helpless: patientProfile?.helpless_belief ?? [''],
+                    Unlovable: patientProfile?.unlovable_belief ?? [''],
+                    Worthless: patientProfile?.worthless_belief ?? [''],
+                    intermediateBelief: patientProfile?.intermediate_belief ?? '',
+                    intermediateBeliefDepression: patientProfile?.intermediate_belief_depression ?? '',
+                    copingStrategies: patientProfile?.coping_strategies ?? '',
+                    situation: patientProfile?.situation ?? '',
+                    autoThought: patientProfile?.auto_thought ?? '',
+                    Emotion: patientProfile?.emotion ?? [''],
+                    behavior: patientProfile?.behavior ?? '',
+                }
+                await saveCCDTruth(ccdTruth);
+                setSavedCCDTruth(ccdTruth);
+                console.log('CCD truth saved successfully');
+            } else {
+                setSavedCCDTruth(existingCCDTruth);
+                console.log('CCD truth already in KV database');
             }
-            await saveCCDTruth(ccdTruth);
-            setSavedCCDTruth(await getCCDTruth(userId, chatId));
-            console.log('CCD truth saved successfully');
-            console.log(savedCCDTruth);
 
             const ccdResult: CCDResult = {
                 userId: userId,
                 chatId: chatId,
                 createdAt: new Date(),
-                relatedHistory: inputValues['Related History'],
-                intermediateBelief: inputValues['Intermediate Belief(s)'],
-                intermediateBeliefDepression: inputValues['Intermediate Belief(s) During Depression'],
-                copingStrategies: inputValues['Coping Strategies'],
-                situation: inputValues['The Situation'],
-                autoThought: inputValues['Automatic Thought(s)'],
-                behavior: inputValues['Behavior(s)'],
+                relatedHistory: inputValues['relatedHistory'] as string,
+                checkedHelpless: inputValues['checkedHelpless'] as [],
+                checkedUnlovable: inputValues['checkedUnlovable'] as [],
+                checkedWorthless: inputValues['checkedWorthless'] as [],
+                intermediateBelief: inputValues['intermediateBelief'] as string,
+                intermediateBeliefDepression: inputValues['intermediateBeliefDepression'] as string,
+                copingStrategies: inputValues['copingStrategies'] as string,
+                situation: inputValues['situation'] as string,
+                autoThought: inputValues['autoThought'] as string,
+                checkedEmotion: inputValues['checkedEmotion'] as [],
+                behavior: inputValues['behavior'] as string,
             }
             await saveCCDResult(ccdResult);
             console.log('CCD results saved successfully');
-            const savedCCDResult = getCCDResult(userId, chatId);
-            console.log(savedCCDResult);
+            console.log(ccdResult);
             setIsSubmitted(true);
+
         } catch (error) {
             console.error('Error saving input values to KV database:', error);
         }
@@ -120,17 +194,17 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                     <span className="font-bold">Instructions: </span> {sessionInstructions["ccd"]}
                 </label>
 
-                {diagramTitles.map(name => (
+                {diagramRelated.map(name => (
                     <div key={name}>
-                        <label className="block text-base font-bold mb-1">{name}</label>
+                        <label className="block text-base font-bold mb-1">{diagramTitleMapping[name]}</label>
                         <label className="block pt-1 text-sm font-medium leading-6 text-zinc-500">
                             {diagramDescriptionMapping[name]}
                         </label>
-                        {name == "Core Belief(s)" ? (
+                        {name == "coreBelief" ? (
                             <div className="mt-2">
                                 {["Helpless", "Unlovable", "Worthless"].map((category, index) => (
                                     <div className="flex flex-col items-start space-y-2 mt-2">
-                                        <CheckboxReactHookFormMultiple key={`${category}-${index}`} category={category} />
+                                        <CheckboxReactHookFormMultiple key={`${category}-${index}`} category={category} onCheckboxChange={handleCheckboxChange} checkboxValues={inputValues[`checked${category}`] as []} />
                                         {isSubmitted && <label className="block leading-normal font-medium text-blue-600">
                                             <span className="font-bold">Reference:</span>
                                             {savedCCDTruth?.[category]?.length === 0 ? (
@@ -150,16 +224,15 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                             (<div className="flex flex-col items-start space-y-2 mt-2">
                                 <textarea
                                     className="w-full h-[80px] px-3 py-2 text-sm leading-tight text-gray-700 border rounded-md appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
-                                    value={inputValues[name]}
+                                    value={inputValues[name] as string} // Ensure fallback to prevent undefined value
                                     onChange={(event) => handleChange(event, name)}
                                 />
-                                {isSubmitted && Object.entries(diagramTruthMapping).map(([key, value]) => (
-                                    name === key && (
-                                        <label key={key} className="block pt-1 leading-normal font-medium text-blue-600">
-                                            <span className="font-bold">Reference: </span>{savedCCDTruth?.[value]}
-                                        </label>
-                                    )
-                                ))}
+
+                                {isSubmitted && (
+                                    <label key={name} className="block pt-1 leading-normal font-medium text-blue-600">
+                                        <span className="font-bold">Reference: </span>{savedCCDTruth?.[name]}
+                                    </label>
+                                )}
                             </div>)
 
                         }
@@ -169,17 +242,17 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                 <label className="block pt-1 leading-normal pt-4 font-medium">
                     <span className="font-bold">Instructions: </span>{sessionInstructions["ccd-situation"]}
                 </label>
-                {diagramTitlesCCD.map(name => (
+                {diagramCCD.map(name => (
                     <div key={name}>
-                        <label className="block text-base font-bold mb-1">{name}</label>
+                        <label className="block text-base font-bold mb-1">{diagramTitleMapping[name]}</label>
                         <label className="block pt-1 text-sm font-medium leading-6 text-zinc-500">
                             {diagramDescriptionMapping[name]}
                         </label>
-                        {name == "Emotion(s)" ? (
+                        {name == "emotion" ? (
                             <div className="flex flex-col items-start space-y-2 mt-2">
-                                {["Emotions"].map((category, index) => (
+                                {["Emotion"].map((category, index) => (
                                     <div className="flex flex-col items-start space-y-2 mt-2">
-                                        <CheckboxReactHookFormMultiple key={`${category}-${index}`} category={category} />
+                                        <CheckboxReactHookFormMultiple key={`${category}-${index}`} category={category} onCheckboxChange={handleCheckboxChange} checkboxValues={inputValues[`checked${category}`] as []} />
                                         {isSubmitted && <label className="block leading-normal font-medium text-blue-600">
                                             <span className="font-bold">Reference:</span>
                                             {
@@ -196,16 +269,15 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                         ) : (<div className="flex flex-col items-start space-y-2 mt-2">
                             <textarea
                                 className="w-full h-[80px] px-3 py-2 text-sm leading-tight text-gray-700 border rounded-md appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
-                                value={inputValues[name]}
+                                value={inputValues[name] as string} // Ensure fallback to prevent undefined value
                                 onChange={(event) => handleChange(event, name)}
                             />
-                            {isSubmitted && Object.entries(diagramTruthMapping).map(([key, value]) => (
-                                name === key && (
-                                    <label key={key} className="block pt-1 leading-normal font-medium text-blue-600">
-                                        <span className="font-bold">Reference: </span>{savedCCDTruth?.[value]}
-                                    </label>
-                                )
-                            ))}
+
+                            {isSubmitted && (
+                                <label key={name} className="block pt-1 leading-normal font-medium text-blue-600">
+                                    <span className="font-bold">Reference: </span>{savedCCDTruth?.[name]}
+                                </label>
+                            )}
                         </div>)}
                     </div>
                 ))}

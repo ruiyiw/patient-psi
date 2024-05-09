@@ -30,38 +30,38 @@ import { emotionItems } from "@/app/api/data/emotions"
 
 interface CheckboxReactHookFormMultipleProps {
     category: string;
-};
+    onCheckboxChange: (category: string, checkedValues: { id: string; label: string }[]) => void;
+    checkboxValues: { id: string; label: string }[];
+}
 
 const FormSchema = z.object({
-    items: z.array(z.string()).refine((value) => value.some((item) => item), {
-        message: "You have to select at least one item.",
-    }),
-})
+    items: z.array(z.object({
+        id: z.string(),
+        label: z.string(),
+    })),
+});
 
-interface CoreBeliefMapping {
+export interface CoreBeliefMapping {
     "Helpless": { id: string; label: string }[];
     "Unlovable": { id: string; label: string }[];
     "Worthless": { id: string; label: string }[];
-    "Emotions": { id: string; label: string }[];
+    "Emotion": { id: string; label: string }[];
     [key: string]: { id: string; label: string }[]; // index signature
 }
 
 
-export function CheckboxReactHookFormMultiple({ category }: CheckboxReactHookFormMultipleProps) {
+export function CheckboxReactHookFormMultiple({ category, onCheckboxChange, checkboxValues }: CheckboxReactHookFormMultipleProps) {
     const [isOpen, setIsOpen] = React.useState(false)
 
     const coreBeliefMapping: CoreBeliefMapping = {
         "Helpless": helplessBeliefItems,
         "Unlovable": unlovableBeliefItems,
         "Worthless": worthlessBeliefItems,
-        "Emotions": emotionItems
+        "Emotion": emotionItems
     };
 
     const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-        defaultValues: {
-            items: ["recents", "home"],
-        },
+        resolver: zodResolver(FormSchema)
     })
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -116,6 +116,9 @@ export function CheckboxReactHookFormMultiple({ category }: CheckboxReactHookFor
                                                 control={form.control}
                                                 name="items"
                                                 render={({ field }) => {
+                                                    // Determine if the item is initially checked
+                                                    const isCheckedInitially = checkboxValues.some((v) => v.id === item.id);
+
                                                     return (
                                                         <FormItem
                                                             key={item.id}
@@ -123,15 +126,15 @@ export function CheckboxReactHookFormMultiple({ category }: CheckboxReactHookFor
                                                         >
                                                             <FormControl>
                                                                 <Checkbox
-                                                                    checked={field.value?.includes(item.id)}
+                                                                    // Set checked state based on whether the item is in checkboxValues
+                                                                    checked={field.value?.some((value) => value.id === item.id) || isCheckedInitially}
                                                                     onCheckedChange={(checked) => {
-                                                                        return checked
-                                                                            ? field.onChange([...field.value, item.id])
-                                                                            : field.onChange(
-                                                                                field.value?.filter(
-                                                                                    (value) => value !== item.id
-                                                                                )
-                                                                            )
+                                                                        const currentValue = Array.isArray(field.value) ? field.value : [];
+                                                                        const newValue = checked
+                                                                            ? [...currentValue, item]
+                                                                            : currentValue.filter((value) => value.id !== item.id);
+                                                                        field.onChange(newValue);
+                                                                        onCheckboxChange(category, newValue);
                                                                     }}
                                                                 />
                                                             </FormControl>

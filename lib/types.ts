@@ -1,4 +1,5 @@
 import { Message } from 'ai'
+import type { DefaultSession } from '@/node_modules/.pnpm/@auth+core@0.18.4/node_modules/@auth/core/types';
 
 export interface Chat extends Record<string, any> {
   id: string
@@ -15,27 +16,27 @@ export interface CCDResult extends Record<string, any> {
   chatId: string;
   createdAt: Date;
   relatedHistory: string;
-  // checkHelpless: {
-  //   id: string;
-  //   label: string;
-  // }[];
-  // checkUnlovable: {
-  //   id: string;
-  //   label: string;
-  // }[];
-  // checkWorthless: {
-  //   id: string;
-  //   label: string;
-  // }[];
+  checkedHelpless: {
+    id: string;
+    label: string;
+  }[];
+  checkedUnlovable: {
+    id: string;
+    label: string;
+  }[];
+  checkedWorthless: {
+    id: string;
+    label: string;
+  }[];
   intermediateBelief: string;
   intermediateBeliefDepression: string;
   copingStrategies: string;
   situation: string;
   autoThought: string;
-  // checkEmotion: {
-  //   id: string;
-  //   label: string;
-  // }[];
+  checkedEmotion: {
+    id: string;
+    label: string;
+  }[];
   behavior: string;
 }
 
@@ -66,7 +67,7 @@ export type ServerActionResult<Result> = Promise<
 export interface Session {
   user: {
     id: string
-    email: string
+    // email: string
   }
 }
 
@@ -77,7 +78,8 @@ export interface AuthResult {
 
 export interface User extends Record<string, any> {
   id: string
-  email: string
-  password: string
-  salt: string
+  // email: string
+  // password: string
+  // userId: string
+  // salt: string
 }

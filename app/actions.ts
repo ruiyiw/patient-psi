@@ -62,6 +62,9 @@ export async function removeChat({ id, path }: { id: string; path: string }) {
   await kv.del(`chat:${id}`)
   await kv.zrem(`user:chat:${session.user.id}`, `chat:${id}`)
 
+  // remove corresponding diagram history
+
+
   revalidatePath('/')
   return revalidatePath(path)
 }

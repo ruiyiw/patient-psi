@@ -92,12 +92,6 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
     }, [userId, chatId]);
 
 
-
-    if (isLoading) {
-        return <div>Loading...</div>;  // or any loading indicator
-    }
-
-
     useEffect(() => {
         const fetchProfile = async () => {
             if (!isFetchedPatientProfile) {
@@ -109,6 +103,10 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
         fetchProfile();
     }, [isFetchedPatientProfile]);
 
+
+    if (isLoading) {
+        return <div>Loading...</div>;  // or any loading indicator
+    }
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>, name: string) => {
         setInputValues(prevValues => ({
@@ -190,7 +188,7 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                 <h4 className="text-lg font-bold">Patient Intake and Cognitive Conceptualization Diagram</h4>
             </div>
             <div className="mb-2 px-5 space-y-6 overflow-auto">
-                <label className="block pt-1 leading-normal pt-4 font-medium">
+                <label className="block leading-normal pt-4 font-medium">
                     <span className="font-bold">Instructions: </span> {sessionInstructions["ccd"]}
                 </label>
 
@@ -203,7 +201,7 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                         {name == "coreBelief" ? (
                             <div className="mt-2">
                                 {["Helpless", "Unlovable", "Worthless"].map((category, index) => (
-                                    <div className="flex flex-col items-start space-y-2 mt-2">
+                                    <div className="flex flex-col items-start space-y-2 mt-2" key={category}>
                                         <CheckboxReactHookFormMultiple key={`${category}-${index}`} category={category} onCheckboxChange={handleCheckboxChange} checkboxValues={inputValues[`checked${category}`] as []} />
                                         {isSubmitted && <label className="block leading-normal font-medium text-blue-600">
                                             <span className="font-bold">Reference:</span>
@@ -239,7 +237,7 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                     </div>
                 ))}
                 <hr className="my-4 border-gray-300" />
-                <label className="block pt-1 leading-normal pt-4 font-medium">
+                <label className="block pt-1 leading-normal font-medium">
                     <span className="font-bold">Instructions: </span>{sessionInstructions["ccd-situation"]}
                 </label>
                 {diagramCCD.map(name => (
@@ -251,7 +249,7 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                         {name == "emotion" ? (
                             <div className="flex flex-col items-start space-y-2 mt-2">
                                 {["Emotion"].map((category, index) => (
-                                    <div className="flex flex-col items-start space-y-2 mt-2">
+                                    <div className="flex flex-col items-start space-y-2 mt-2" key={category}>
                                         <CheckboxReactHookFormMultiple key={`${category}-${index}`} category={category} onCheckboxChange={handleCheckboxChange} checkboxValues={inputValues[`checked${category}`] as []} />
                                         {isSubmitted && <label className="block leading-normal font-medium text-blue-600">
                                             <span className="font-bold">Reference:</span>
@@ -284,7 +282,7 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
             </div>
             <div className="flex justify-end p-4">
                 <button
-                    className="bg-green-500 text-sm font-semiboldflex h-[35px] w-[220px] items-center justify-center rounded-md bg-red-500 text-sm font-semibold text-white"
+                    className="text-sm font-semiboldflex h-[35px] w-[220px] items-center justify-center rounded-md bg-red-500 text-sm font-semibold text-white"
                     onClick={handleSubmit}
                 >
                     Submit and review answers

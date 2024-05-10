@@ -11,7 +11,7 @@ export const diagramDescriptionMapping: { [key: string]: string } = {
 };
 
 export const diagramTitleMapping: { [key: string]: string } = {
-    'relatedHistory': 'Related History',
+    'relatedHistory': 'Prior History from previous sessions',
     'coreBelief': 'Core Belief(s)',
     'intermediateBelief': 'Intermediate Belief(s)',
     'intermediateBeliefDepression': 'Intermediate Belief (s) During Depression',
@@ -22,6 +22,6 @@ export const diagramTitleMapping: { [key: string]: string } = {
     'behavior': 'Behavior(s)',
 }
 
-export const diagramRelated: string[] = ['relatedHistory', 'coreBelief', 'intermediateBelief', 'intermediateBeliefDepression', 'copingStrategies']
+export const diagramRelated: string[] = ['coreBelief', 'intermediateBelief', 'intermediateBeliefDepression', 'copingStrategies']
 
 export const diagramCCD: string[] = ['situation', 'autoThought', 'emotion', 'behavior']

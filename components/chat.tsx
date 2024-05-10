@@ -109,8 +109,18 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
                       <h1 className="text-xl font-semibold">
                         Session Begins
                       </h1>
+                      <label className="leading-normal pt-4 text-lg font-semibold text-blue-600">
+                        Prior history of {patientProfile.name} from previous sessions:
+                      </label>
+                      <p className="leading-normal pt-2 font-medium text-blue-600">
+                        {patientProfile.history}
+                      </p>
+                      <p className="leading-normal pt-1 font-light text-black dark:text-white">
+                        (The prior history will be shown in the right column throughout the session)
+                      </p>
                       <p className="leading-normal pt-4 font-medium text-black dark:text-white">
-                        Now you may start your session with client <b>{patientProfile.name}</b>. Please start the session by entering the first greeting to <b>{patientProfile.name}</b> in the textbox below.
+                        Now you may start your session with client <b>{patientProfile.name}</b>.
+                        Please start the session by entering the first greeting to <b>{patientProfile.name}</b> in the textbox below.
                       </p>
                     </div>
                   </div>
@@ -127,11 +137,13 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
           </>
         )}
       </div >
-      {messages.length ? (
-        <Sidebar className="peer absolute inset-y-0 z-30 hidden translate-x-full right-0 border-l bg-muted duration-300 ease-in-out data-[state=open]:translate-x-0 lg:flex lg:w-[400px] xl:w-[600px]">
-          {/* @ts-ignore */}
-          <DiagramList userId={session.user.id} chatId={id} />
-        </Sidebar>) : (<></>)}
+      {
+        messages.length ? (
+          <Sidebar className="peer absolute inset-y-0 z-30 hidden translate-x-full right-0 border-l bg-muted duration-300 ease-in-out data-[state=open]:translate-x-0 lg:flex lg:w-[400px] xl:w-[600px]">
+            {/* @ts-ignore */}
+            <DiagramList userId={session.user.id} chatId={id} />
+          </Sidebar>) : (<></>)
+      }
     </>
   );
 }

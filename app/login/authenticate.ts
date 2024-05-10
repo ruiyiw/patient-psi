@@ -19,7 +19,7 @@ export async function authenticate(
             .object({
                 // email: z.string().min(6),
                 // password: z.string().min(6)
-                participantId: z.string().min(6)
+                participantId: z.string().min(2)
             })
             .safeParse({
                 // email,

@@ -104,29 +104,9 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
     }, [isFetchedPatientProfile]);
 
 
-    if (isLoading) {
-        return <div>Loading...</div>;  // or any loading indicator
-    }
-
-    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>, name: string) => {
-        setInputValues(prevValues => ({
-            ...prevValues,
-            [name]: event.target.value,
-        }));
-        console.log(inputValues);
-    };
-
-    const handleCheckboxChange = (category: string, checkedValues: { id: string; label: string }[]) => {
-        setInputValues((prevValues) => ({
-            ...prevValues,
-            [`checked${category}`]: checkedValues,
-        }));
-    };
-
-
-    const handleSubmit = async () => {
-        try {
-            // Check if ccdTruth already exists in KV database
+    useEffect(() => {
+        // Check if ccdTruth already exists in KV database
+        const fetchCCDTruth = async () => {
             const existingCCDTruth = await getCCDTruth(userId, chatId);
 
             if (!existingCCDTruth) {
@@ -154,12 +134,39 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                 setSavedCCDTruth(existingCCDTruth);
                 console.log('CCD truth already in KV database');
             }
+        };
+
+        fetchCCDTruth();
+    }, [userId, chatId, patientProfile])
+
+
+    if (isLoading) {
+        return <div>Loading...</div>;  // or any loading indicator
+    }
+
+    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>, name: string) => {
+        setInputValues(prevValues => ({
+            ...prevValues,
+            [name]: event.target.value,
+        }));
+        console.log(inputValues);
+    };
+
+    const handleCheckboxChange = (category: string, checkedValues: { id: string; label: string }[]) => {
+        setInputValues((prevValues) => ({
+            ...prevValues,
+            [`checked${category}`]: checkedValues,
+        }));
+    };
+
+
+    const handleSubmit = async () => {
+        try {
 
             const ccdResult: CCDResult = {
                 userId: userId,
                 chatId: chatId,
                 createdAt: new Date(),
-                relatedHistory: inputValues['relatedHistory'] as string,
                 checkedHelpless: inputValues['checkedHelpless'] as [],
                 checkedUnlovable: inputValues['checkedUnlovable'] as [],
                 checkedWorthless: inputValues['checkedWorthless'] as [],
@@ -191,7 +198,10 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                 <label className="block leading-normal pt-4 font-medium">
                     <span className="font-bold">Instructions: </span> {sessionInstructions["ccd"]}
                 </label>
-
+                <label className="block text-base font-bold mb-1 text-blue-600">{diagramTitleMapping["relatedHistory"]}:</label>
+                <p className="leading-normal font-medium text-blue-600">
+                    {savedCCDTruth?.relatedHistory}
+                </p>
                 {diagramRelated.map(name => (
                     <div key={name}>
                         <label className="block text-base font-bold mb-1">{diagramTitleMapping[name]}</label>
@@ -221,7 +231,7 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                         ) :
                             (<div className="flex flex-col items-start space-y-2 mt-2">
                                 <textarea
-                                    className="w-full h-[80px] px-3 py-2 text-sm leading-tight text-gray-700 border rounded-md appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
+                                    className="w-full h-[80px] px-3 py-2 text-sm leading-tight text-gray-700 dark:text-gray-200 border rounded-md appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
                                     value={inputValues[name] as string} // Ensure fallback to prevent undefined value
                                     onChange={(event) => handleChange(event, name)}
                                 />
@@ -266,7 +276,7 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                             </div>
                         ) : (<div className="flex flex-col items-start space-y-2 mt-2">
                             <textarea
-                                className="w-full h-[80px] px-3 py-2 text-sm leading-tight text-gray-700 border rounded-md appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
+                                className="w-full h-[80px] px-3 py-2 text-sm leading-tight text-gray-700 dark:text-gray-200 border rounded-md appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
                                 value={inputValues[name] as string} // Ensure fallback to prevent undefined value
                                 onChange={(event) => handleChange(event, name)}
                             />

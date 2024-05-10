@@ -15,7 +15,6 @@ export interface CCDResult extends Record<string, any> {
   userId: string;
   chatId: string;
   createdAt: Date;
-  relatedHistory: string;
   checkedHelpless: {
     id: string;
     label: string;

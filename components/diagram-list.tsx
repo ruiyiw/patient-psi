@@ -195,13 +195,58 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                 <h4 className="text-lg font-bold">Patient Intake and Cognitive Conceptualization Diagram</h4>
             </div>
             <div className="mb-2 px-5 space-y-6 overflow-auto">
-                <label className="block leading-normal pt-4 font-medium">
-                    <span className="font-bold">Instructions: </span> {sessionInstructions["ccd"]}
-                </label>
-                <label className="block text-base font-bold mb-1 text-blue-600">{diagramTitleMapping["relatedHistory"]}:</label>
+                <div className='-mb-4'>
+                    <label className="block text-base font-bold text-blue-600">{diagramTitleMapping["relatedHistory"]}:</label>
+                </div>
                 <p className="leading-normal font-medium text-blue-600">
                     {savedCCDTruth?.relatedHistory}
                 </p>
+                <label className="block pt-1 leading-normal font-medium">
+                    <span className="font-bold">Instructions: </span>{sessionInstructions["ccd-situation"]}
+                </label>
+                {diagramCCD.map(name => (
+                    <div key={name}>
+                        <label className="block text-base font-bold mb-1">{diagramTitleMapping[name]}</label>
+                        <label className="block pt-1 text-sm font-medium leading-6 text-zinc-500">
+                            {diagramDescriptionMapping[name]}
+                        </label>
+                        {name == "emotion" ? (
+                            <div className="flex flex-col items-start space-y-2 mt-2">
+                                {["Emotion"].map((category, index) => (
+                                    <div className="flex flex-col items-start space-y-2 mt-2" key={category}>
+                                        <CheckboxReactHookFormMultiple key={`${category}-${index}`} category={category} onCheckboxChange={handleCheckboxChange} checkboxValues={inputValues[`checked${category}`] as []} />
+                                        {isSubmitted && <label className="block leading-normal font-medium text-blue-600">
+                                            <span className="font-bold">Reference:</span>
+                                            {
+                                                savedCCDTruth?.['Emotion']?.map((item: string, index: number) => (
+                                                    <div key={index} className="pt-1 leading-normal text-blue-600">
+                                                        {item}
+                                                    </div>
+                                                )
+                                                )}
+                                        </label>}
+                                    </div>))}
+
+                            </div>
+                        ) : (<div className="flex flex-col items-start space-y-2 mt-2">
+                            <textarea
+                                className="w-full h-[80px] px-3 py-2 text-sm leading-tight text-gray-700 dark:text-gray-200 border rounded-md appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
+                                value={inputValues[name] as string} // Ensure fallback to prevent undefined value
+                                onChange={(event) => handleChange(event, name)}
+                            />
+
+                            {isSubmitted && (
+                                <label key={name} className="block pt-1 leading-normal font-medium text-blue-600">
+                                    <span className="font-bold">Reference: </span>{savedCCDTruth?.[name]}
+                                </label>
+                            )}
+                        </div>)}
+                    </div>
+                ))}
+                <hr className="my-4 border-gray-300" />
+                <label className="block leading-normal pt-4 font-medium">
+                    <span className="font-bold">Instructions: </span> {sessionInstructions["ccd"]}
+                </label>
                 {diagramRelated.map(name => (
                     <div key={name}>
                         <label className="block text-base font-bold mb-1">{diagramTitleMapping[name]}</label>
@@ -244,49 +289,6 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                             </div>)
 
                         }
-                    </div>
-                ))}
-                <hr className="my-4 border-gray-300" />
-                <label className="block pt-1 leading-normal font-medium">
-                    <span className="font-bold">Instructions: </span>{sessionInstructions["ccd-situation"]}
-                </label>
-                {diagramCCD.map(name => (
-                    <div key={name}>
-                        <label className="block text-base font-bold mb-1">{diagramTitleMapping[name]}</label>
-                        <label className="block pt-1 text-sm font-medium leading-6 text-zinc-500">
-                            {diagramDescriptionMapping[name]}
-                        </label>
-                        {name == "emotion" ? (
-                            <div className="flex flex-col items-start space-y-2 mt-2">
-                                {["Emotion"].map((category, index) => (
-                                    <div className="flex flex-col items-start space-y-2 mt-2" key={category}>
-                                        <CheckboxReactHookFormMultiple key={`${category}-${index}`} category={category} onCheckboxChange={handleCheckboxChange} checkboxValues={inputValues[`checked${category}`] as []} />
-                                        {isSubmitted && <label className="block leading-normal font-medium text-blue-600">
-                                            <span className="font-bold">Reference:</span>
-                                            {
-                                                savedCCDTruth?.['Emotion']?.map((item: string, index: number) => (
-                                                    <div key={index} className="pt-1 leading-normal text-blue-600">
-                                                        {item}
-                                                    </div>
-                                                )
-                                                )}
-                                        </label>}
-                                    </div>))}
-
-                            </div>
-                        ) : (<div className="flex flex-col items-start space-y-2 mt-2">
-                            <textarea
-                                className="w-full h-[80px] px-3 py-2 text-sm leading-tight text-gray-700 dark:text-gray-200 border rounded-md appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
-                                value={inputValues[name] as string} // Ensure fallback to prevent undefined value
-                                onChange={(event) => handleChange(event, name)}
-                            />
-
-                            {isSubmitted && (
-                                <label key={name} className="block pt-1 leading-normal font-medium text-blue-600">
-                                    <span className="font-bold">Reference: </span>{savedCCDTruth?.[name]}
-                                </label>
-                            )}
-                        </div>)}
                     </div>
                 ))}
             </div>

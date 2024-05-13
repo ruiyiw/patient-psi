@@ -10,6 +10,7 @@ import { PatientTypeMenu } from '@/components/patient-type-menu';
 import { useUIState, useAIState } from 'ai/rsc';
 import React from 'react'
 import { PatientProfile, initialProfile } from '@/app/api/data/patient-profiles'
+import { Stopwatch } from '@/components/stopwatch'
 
 
 const exampleMessages = [
@@ -65,6 +66,7 @@ export function StartSession({ onStartedChange, onSetPatientProfile }: StartSess
                     onStartedChange={handleStartedChange}
                     onSetPatientProfile={handleSetdPatientProfile} ></PatientTypeMenu>
             </div>
+            <Stopwatch />
         </div >
     )
 }

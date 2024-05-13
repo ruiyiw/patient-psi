@@ -85,7 +85,7 @@ export function CheckboxReactHookFormMultiple({ category, onCheckboxChange, chec
                 className="w-[350px] space-y-2 mb-4">
                 <div className="flex items-center space-x-1 px-0">
                     <div className="rounded-md border px-2 py-3 text-sm font-semibold">
-                        Expand to select <span className="underline"> {category === "Emotions" ? "emotions" : category + " Core Beliefs"} </span>
+                        Expand to select <span className="underline"> {category === "Emotion" ? "emotions" : category + " Core Beliefs"} </span>
                     </div>
                     <CollapsibleTrigger asChild>
                         <Button variant="ghost" size="sm" className="w-9 p-0 hover:bg-gray-200">
@@ -107,7 +107,7 @@ export function CheckboxReactHookFormMultiple({ category, onCheckboxChange, chec
                                         <div className="mb-3">
                                             {/* <FormLabel className="block text-sm font-medium mb-1">{category} Core Beliefs</FormLabel> */}
                                             <FormDescription>
-                                                Select zero or more core beliefs
+                                                {category == 'Emotion' ? 'Select one or more emotions' : 'Select one or more beliefs'}
                                             </FormDescription>
                                         </div>
                                         {coreBeliefMapping[category].map((item) => (

@@ -2,7 +2,7 @@ import 'server-only'
 
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getProfile } from '@/app/api/sampleProfile'; // Import the getProfile function from your profile library
+import { getProfile } from '@/app/api/getDataFromKV'; // Import the getProfile function from your profile library
 
 export async function GET(request: NextRequest) {
     try {

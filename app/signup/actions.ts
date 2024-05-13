@@ -57,7 +57,7 @@ export async function signup(
     .object({
       // email: z.string().email(),
       // password: z.string().min(6)
-      participantId: z.string().min(2)
+      participantId: z.string()
     })
     .safeParse({
       // email,

@@ -107,10 +107,10 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
                   <div className="mx-auto max-w-2xl px-4">
                     <div className="flex flex-col gap-2 rounded-lg border bg-background p-8">
                       <h1 className="text-xl font-semibold">
-                        Session Begins
+                        New Session Begins
                       </h1>
                       <label className="leading-normal pt-4 text-lg font-semibold text-blue-600">
-                        Prior history of {patientProfile.name} from previous sessions:
+                        Relevant history of {patientProfile.name}:
                       </label>
                       <p className="leading-normal pt-2 font-medium text-blue-600">
                         {patientProfile.history}

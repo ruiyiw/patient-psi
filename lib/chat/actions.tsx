@@ -35,7 +35,7 @@ import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
 import { Chat } from '@/lib/types'
 import { auth } from '@/auth'
 
-import { getPrompt } from '@/app/api/prompt/route'
+import { getPrompt } from '@/app/api/getDataFromKV'
 
 
 const openai = new OpenAI({

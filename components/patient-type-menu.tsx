@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { patientTypes, patientTypeDescriptions } from "@/app/api/data/patient-types"
 import { PatientProfile, initialProfile } from '@/app/api/data/patient-profiles'
 
+// Call api/prompt/GET to fetch patient profile 
 async function fetchPatientProfile(
     setIsStarted: (isStarted: boolean) => void,
     setPatientProfile: (patientProfile: PatientProfile) => void) {
@@ -21,7 +22,7 @@ async function fetchPatientProfile(
                 console.log(error);
             });
     } catch (error) {
-        console.log("error fetching patient name")
+        console.log("error fetching patient profile")
     }
 }
 
@@ -97,16 +98,17 @@ export function PatientTypeMenu({ onStartedChange, onSetPatientProfile }: Patien
     }
 
     const handleStartButtonClick = async () => {
-        if (selectedType) {
-            const selectedPatientTypeContent = patientTypes.find((item) => item.type === selectedType)?.content;
-
+        const isValidType = patientTypes.some((type) => type.type === selectedType);
+        if (isValidType && selectedType) {
+            // const selectedPatientTypeContent = patientTypes.find((item) => item.type === selectedType)?.content;
+            console.log(selectedType);
             try {
                 const response = await fetch('/api/prompt', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ patientTypeContent: selectedPatientTypeContent })
+                    body: JSON.stringify({ patientType: selectedType })
                 });
                 if (response.ok) {
                     console.log("patient type submitted.");
@@ -116,8 +118,10 @@ export function PatientTypeMenu({ onStartedChange, onSetPatientProfile }: Patien
             } catch (error) {
                 console.log(error);
             }
+            fetchPatientProfile(setIsStarted, setPatientProfile);
+        } else {
+            alert('Please select a valid patient type.');
         }
-        fetchPatientProfile(setIsStarted, setPatientProfile);
 
     }
 

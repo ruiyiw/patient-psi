@@ -116,7 +116,7 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
                         {patientProfile.history}
                       </p>
                       <p className="leading-normal pt-1 font-light text-black dark:text-white">
-                        (The prior history will be shown in the right column throughout the session)
+                        (The relevant history will be shown in the right column throughout the session)
                       </p>
                       <p className="leading-normal pt-4 font-medium text-black dark:text-white">
                         Now you may start your session with client <b>{patientProfile.name}</b>.

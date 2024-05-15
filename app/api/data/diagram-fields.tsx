@@ -2,7 +2,7 @@ export const diagramDescriptionMapping: { [key: string]: string } = {
     'relatedHistory': 'Please capture important background information about the client, such as significant life events or circumstances that may have contributed to their current mental state or behavior.',
     'coreBelief': 'Please select any core beliefs that match the your understanding of the client under the following three categories: Hopeless, Unlovable, and Worthless Core beliefs.',
     'intermediateBelief': 'Please identify the client\'s intermediate beliefs that influence their perception of themselves, others, and the world around them.',
-    'intermediateBeliefDepression': 'Please identify Recognize how the client\'s intermediate beliefs change and become more negative during episodes of depression, if applicable',
+    'intermediateBeliefDepression': 'Please identify how the client\'s intermediate beliefs change and become more negative during episodes of depression, if applicable',
     'copingStrategies': 'Please describe the client\'s coping strategies in managing the emotions',
     'situation': 'Please record the specific situation or trigger that the client recently encountered, which led to negative automatic thoughts and emotional distress.',
     'autoThought': 'Please record the client\'s immediate, unfiltered thoughts that arise in response to the identified situation.',

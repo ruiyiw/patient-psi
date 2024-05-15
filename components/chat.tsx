@@ -122,6 +122,9 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
                         Now you may start your session with client <b>{patientProfile.name}</b>.
                         Please start the session by entering the first greeting to <b>{patientProfile.name}</b> in the textbox below.
                       </p>
+                      <label className="block pt-1 leading-normal font-medium text-red-500">
+                        <span className="font-bold">The expected time of the session is around 10 minutes.</span>
+                      </label>
                     </div>
                   </div>
                 </div>

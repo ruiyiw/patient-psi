@@ -201,6 +201,9 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                 <p className="leading-normal font-medium text-blue-600">
                     {savedCCDTruth?.relatedHistory}
                 </p>
+                <label className="block pt-1 leading-normal font-medium text-red-500">
+                    <span className="font-bold">The expected time of the session is around 10 minutes.</span>
+                </label>
                 <label className="block pt-1 leading-normal font-medium">
                     <span className="font-bold">Instructions: </span>{sessionInstructions["ccd-situation"]}
                 </label>

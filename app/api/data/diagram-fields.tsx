@@ -11,7 +11,7 @@ export const diagramDescriptionMapping: { [key: string]: string } = {
 };
 
 export const diagramTitleMapping: { [key: string]: string } = {
-    'relatedHistory': 'Prior History from previous sessions',
+    'relatedHistory': 'Relevant History',
     'coreBelief': 'Core Belief(s)',
     'intermediateBelief': 'Intermediate Belief(s)',
     'intermediateBeliefDepression': 'Intermediate Belief (s) During Depression',

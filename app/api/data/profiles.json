@@ -205,7 +205,7 @@
             "I am incompetent.",
             "I am helpless.",
             "I am trapped.",
-            "I am a failure, loser.",
+            "I am a failure, loser."
         ],
         "unlovable_belief": [],
         "worthless_belief": [],
@@ -437,7 +437,7 @@
     },
     {
         "name": "Bryce",
-        "id": "8-1",
+        "id": "7-1",
         "type": [
             "plain",
             "verbose",
@@ -465,7 +465,7 @@
     },
     {
         "name": "Bryce",
-        "id": "8-2",
+        "id": "7-2",
         "type": [
             "plain",
             "verbose",
@@ -492,7 +492,7 @@
     },
     {
         "name": "Ramona",
-        "id": "9-1",
+        "id": "8-1",
         "type": [
             "plain",
             "verbose",
@@ -522,7 +522,7 @@
     },
     {
         "name": "Ramona",
-        "id": "9-2",
+        "id": "8-2",
         "type": [
             "plain",
             "verbose",
@@ -552,7 +552,7 @@
     },
     {
         "name": "Fiona",
-        "id": "10-1",
+        "id": "9-1",
         "type": [
             "plain",
             "verbose",
@@ -585,7 +585,7 @@
     },
     {
         "name": "Fiona",
-        "id": "10-2",
+        "id": "9-2",
         "type": [
             "plain",
             "verbose",
@@ -612,7 +612,7 @@
     },
     {
         "name": "Fiona",
-        "id": "10-3",
+        "id": "9-3",
         "type": [
             "plain",
             "verbose",
@@ -642,7 +642,7 @@
     },
     {
         "name": "Grace",
-        "id": "11-1",
+        "id": "10-1",
         "type": [
             "plain",
             "verbose",
@@ -672,7 +672,7 @@
     },
     {
         "name": "Grace",
-        "id": "11-2",
+        "id": "10-2",
         "type": [
             "plain",
             "verbose",
@@ -705,7 +705,7 @@
     },
     {
         "name": "Grace",
-        "id": "11-3",
+        "id": "10-3",
         "type": [
             "plain",
             "verbose",
@@ -738,7 +738,7 @@
     },
     {
         "name": "Ian",
-        "id": "12-1",
+        "id": "11-1",
         "type": [
             "plain",
             "verbose",
@@ -773,7 +773,7 @@
     },
     {
         "name": "Ian",
-        "id": "12-2",
+        "id": "11-2",
         "type": [
             "plain",
             "verbose",
@@ -805,7 +805,7 @@
     },
     {
         "name": "Jay",
-        "id": "13-1",
+        "id": "12-1",
         "type": [
             "plain",
             "verbose",
@@ -836,7 +836,7 @@
     },
     {
         "name": "Jay",
-        "id": "13-2",
+        "id": "12-2",
         "type": [
             "plain",
             "verbose",
@@ -867,7 +867,7 @@
     },
     {
         "name": "Yvette",
-        "id": "14-1",
+        "id": "13-1",
         "type": [
             "plain",
             "verbose",
@@ -896,7 +896,7 @@
     },
     {
         "name": "Yvette",
-        "id": "14-2",
+        "id": "13-2",
         "type": [
             "plain",
             "verbose",
@@ -924,7 +924,7 @@
     },
     {
         "name": "Linda",
-        "id": "15-1",
+        "id": "14-1",
         "type": [
             "plain",
             "verbose",
@@ -953,7 +953,7 @@
     },
     {
         "name": "Linda",
-        "id": "15-2",
+        "id": "14-2",
         "type": [
             "plain",
             "verbose",
@@ -982,7 +982,7 @@
     },
     {
         "name": "Karen",
-        "id": "16-1",
+        "id": "15-1",
         "type": [
             "plain",
             "verbose",
@@ -1013,7 +1013,7 @@
     },
     {
         "name": "Karen",
-        "id": "16-2",
+        "id": "15-2",
         "type": [
             "plain",
             "verbose",
@@ -1045,7 +1045,7 @@
     },
     {
         "name": "Mason",
-        "id": "17-1",
+        "id": "16-1",
         "type": [
             "plain",
             "verbose",
@@ -1074,7 +1074,7 @@
     },
     {
         "name": "Mason",
-        "id": "17-2",
+        "id": "16-2",
         "type": [
             "plain",
             "verbose",
@@ -1103,7 +1103,7 @@
     },
     {
         "name": "Sarah",
-        "id": "18-1",
+        "id": "17-1",
         "type": [
             "plain",
             "verbose",
@@ -1137,7 +1137,7 @@
     },
     {
         "name": "Sarah",
-        "id": "18-2",
+        "id": "17-2",
         "type": [
             "plain",
             "verbose",
@@ -1171,7 +1171,7 @@
     },
     {
         "name": "Sarah",
-        "id": "18-3",
+        "id": "17-3",
         "type": [
             "plain",
             "verbose",
@@ -1205,7 +1205,7 @@
     },
     {
         "name": "Noah",
-        "id": "19-1",
+        "id": "18-1",
         "type": [
             "plain",
             "verbose",
@@ -1237,7 +1237,7 @@
     },
     {
         "name": "Noah",
-        "id": "19-2",
+        "id": "18-2",
         "type": [
             "plain",
             "verbose",
@@ -1269,7 +1269,7 @@
     },
     {
         "name": "Rachel",
-        "id": "20-2",
+        "id": "19-1",
         "type": [
             "plain",
             "verbose",
@@ -1300,7 +1300,7 @@
     },
     {
         "name": "Rachel",
-        "id": "20-3",
+        "id": "19-2",
         "type": [
             "plain",
             "verbose",
@@ -1330,7 +1330,7 @@
     },
     {
         "name": "Patrick",
-        "id": "21-1",
+        "id": "20-1",
         "type": [
             "plain",
             "verbose",
@@ -1361,7 +1361,7 @@
     },
     {
         "name": "Patrick",
-        "id": "21-2",
+        "id": "20-2",
         "type": [
             "plain",
             "verbose",
@@ -1392,7 +1392,7 @@
     },
     {
         "name": "Talia",
-        "id": "22-1",
+        "id": "21-1",
         "type": [
             "plain",
             "verbose",
@@ -1426,7 +1426,7 @@
     },
     {
         "name": "Talia",
-        "id": "22-2",
+        "id": "21-2",
         "type": [
             "plain",
             "verbose",
@@ -1460,7 +1460,7 @@
     },
     {
         "name": "Wendy",
-        "id": "23-1",
+        "id": "22-1",
         "type": [
             "plain",
             "verbose",
@@ -1495,7 +1495,7 @@
     },
     {
         "name": "Wendy",
-        "id": "23-2",
+        "id": "22-2",
         "type": [
             "plain",
             "verbose",
@@ -1529,7 +1529,7 @@
     },
     {
         "name": "Ashley",
-        "id": "24-1",
+        "id": "23-1",
         "type": [
             "plain",
             "verbose",
@@ -1563,7 +1563,7 @@
     },
     {
         "name": "Ashley",
-        "id": "24-2",
+        "id": "23-2",
         "type": [
             "plain",
             "verbose",
@@ -1598,7 +1598,7 @@
     },
     {
         "name": "Ashley",
-        "id": "24-3",
+        "id": "23-3",
         "type": [
             "plain",
             "verbose",
@@ -1632,7 +1632,7 @@
     },
     {
         "name": "Evan",
-        "id": "25-1",
+        "id": "24-1",
         "type": [
             "plain",
             "verbose",
@@ -1665,7 +1665,7 @@
     },
     {
         "name": "Evan",
-        "id": "25-2",
+        "id": "24-2",
         "type": [
             "plain",
             "verbose",
@@ -1698,7 +1698,7 @@
     },
     {
         "name": "Evan",
-        "id": "25-3",
+        "id": "24-3",
         "type": [
             "plain",
             "verbose",
@@ -1732,7 +1732,7 @@
     },
     {
         "name": "Zac",
-        "id": "26-1",
+        "id": "25-1",
         "type": [
             "plain",
             "verbose",
@@ -1761,7 +1761,7 @@
     },
     {
         "name": "Zac",
-        "id": "26-2",
+        "id": "25-2",
         "type": [
             "plain",
             "verbose",
@@ -1791,7 +1791,7 @@
     },
     {
         "name": "Zac",
-        "id": "26-3",
+        "id": "25-3",
         "type": [
             "plain",
             "verbose",

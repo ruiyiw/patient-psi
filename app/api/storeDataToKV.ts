@@ -35,7 +35,7 @@ async function deleteAllProfilesFromKV() {
             const id = profile.id;
             const key = `profile_${id}`;
 
-            await kv.delete(key);
+            await kv.del(key);
             console.log(`Profile with key ${key} deleted successfully`);
         }
 
@@ -45,5 +45,5 @@ async function deleteAllProfilesFromKV() {
     }
 }
 
-deleteAllProfilesFromKV();
-// storeDataToKV();
+// deleteAllProfilesFromKV();
+storeDataToKV();

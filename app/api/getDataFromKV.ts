@@ -2,6 +2,9 @@ import { PatientProfile } from "./data/patient-profiles";
 import { patientTypes, patientTypeDescriptions } from "./data/patient-types";
 import { auth } from "@/auth";
 import { kv } from "@vercel/kv";
+import { profile } from "console";
+import fs from 'fs';
+import path from 'path';
 
 
 async function getUserID(): Promise<string | null> {
@@ -44,6 +47,36 @@ export async function getPatientType(): Promise<string> {
     return patientType as string;
 }
 
+// Random sample
+// export async function sampleProfile(): Promise<PatientProfile | null> {
+//     try {
+//         const all_keys = await kv.keys('profile_*');
+
+//         if (all_keys.length === 0) {
+//             throw new Error('No profiles found');
+//         }
+
+//         const randomIndex = Math.floor(Math.random() * all_keys.length);
+//         const randomKey = all_keys[randomIndex];
+
+//         const profileData = await kv.get(randomKey);
+
+//         if (!profileData) {
+//             return null;
+//         }
+
+//         try {
+//             return profileData as PatientProfile;
+//         } catch (error) {
+//             console.error('Error parsing profile data:', error);
+//             return null;
+//         }
+//     } catch (error) {
+//         console.error('Error sampling profile:', error);
+//         throw error;
+//     }
+
+// }
 
 export async function sampleProfile(): Promise<PatientProfile | null> {
     try {
@@ -53,26 +86,45 @@ export async function sampleProfile(): Promise<PatientProfile | null> {
             throw new Error('No profiles found');
         }
 
-        const randomIndex = Math.floor(Math.random() * all_keys.length);
-        const randomKey = all_keys[randomIndex];
+        const filePath = path.join(process.cwd(), 'app/api/data/participant-mapping.json');
+        const jsonData = fs.readFileSync(filePath, 'utf8');
+        const data = JSON.parse(jsonData);
 
-        const profileData = await kv.get(randomKey);
+        const userID = await getUserID();
 
-        if (!profileData) {
-            return null;
+        if (userID as string in data) {
+            const profileKey = 'profile_' + data[userID as string][0];
+            const profileData = await kv.get(profileKey);
+            console.log(profileData);
+            const value = data[userID as string];
+            const updatedValue = value.slice(1);
+            data[userID as string] = updatedValue;
+            fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+            console.log(profileKey + ' updated successfully');
+
+            try {
+                return profileData as PatientProfile;
+            } catch (error) {
+                console.error('Error parsing profile data:', error);
+                return null;
+            }
         }
 
+        const randomIndex = Math.floor(Math.random() * all_keys.length);
+        const randomKey = all_keys[randomIndex];
+        const randomProfileData = await kv.get(randomKey);
+
         try {
-            return profileData as PatientProfile;
+            return randomProfileData as PatientProfile;
         } catch (error) {
             console.error('Error parsing profile data:', error);
             return null;
         }
+
     } catch (error) {
         console.error('Error sampling profile:', error);
         throw error;
     }
-
 }
 
 

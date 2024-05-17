@@ -45,5 +45,45 @@ async function deleteAllProfilesFromKV() {
     }
 }
 
+
+async function deleteCustomPrefixFromKV(prefix: string) {
+    try {
+        const keys = await kv.keys(prefix);
+
+        for (const key of keys) {
+            await kv.del(key);
+            console.log(key, 'deleted successfully');
+        }
+    } catch (error) {
+        console.error('Error retrieving keys:', error);
+    }
+}
+
+
+async function assignParticipantSessions(userId: string, sessions: string[]) {
+    const key = `assigned:${userId}`;
+    const value = {
+        'sessions': sessions
+    };
+    await kv.set(key, JSON.stringify(value));
+}
+
+
 // deleteAllProfilesFromKV();
-storeDataToKV();
+// storeDataToKV();
+// deleteCustomPrefixFromKV("");
+assignParticipantSessions("999999", ["1-1", "2-1", "3-1"]);
+
+
+// Collection of kv keys
+// profile_*-*
+// ccdResult:${userId}:${chatId}
+// ccdTruth:${userId}:${chatId}
+// chat:${chatId}
+// user:${userId}
+// user:chat:${userId}
+
+
+// curr_profile:${userId}
+// type:${userId}:${chatId}
+// assigned:${userId}

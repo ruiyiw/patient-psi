@@ -179,10 +179,6 @@ export async function saveCCDResult(ccdResult: CCDResult) {
     const pipeline = kv.pipeline()
     const ccdResultKey = `ccdResult:${ccdResult.userId}:${ccdResult.chatId}`;
     pipeline.hmset(ccdResultKey, ccdResult)
-    pipeline.zadd(`user:ccdResults:${ccdResult.userId}`, {
-      score: Date.now(),
-      member: ccdResultKey,
-    });
     await pipeline.exec()
   } else {
     return
@@ -209,10 +205,6 @@ export async function saveCCDTruth(ccdTruth: CCDTruth) {
     const pipeline = kv.pipeline()
     const ccdTruthKey = `ccdTruth:${ccdTruth.userId}:${ccdTruth.chatId}`;
     pipeline.hmset(ccdTruthKey, ccdTruth)
-    pipeline.zadd(`user:ccdTruth:${ccdTruth.userId}`, {
-      score: Date.now(),
-      member: ccdTruthKey,
-    });
     await pipeline.exec()
   } else {
     return

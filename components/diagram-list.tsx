@@ -24,8 +24,26 @@ async function fetchPatientProfile(
                 console.log(error);
             });
     } catch (error) {
-        console.log("error fetching patient profile")
+        console.log("error fetching patient profile");
     }
+}
+
+
+async function fetchPatientType(
+    userId: string,
+    chatId: string,
+    setPatientType: (patientType: string) => void) {
+    try {
+        fetch(`/api/type?userId=${userId}&chatId=${chatId}`)
+            .then(response => response.json()
+                .then(data => { setPatientType(data.type) })
+            ).catch(error => {
+                console.log(error);
+            });
+    } catch (error) {
+        console.log("error fetching patient type");
+    }
+
 }
 
 
@@ -49,6 +67,7 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
     const [savedCCDTruth, setSavedCCDTruth] = useState<CCDTruth | null>(null);
     const [savedCCDResult, setSavedCCDResult] = useState<CCDResult | null>(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [patientType, setPatientType] = useState('');
     const initialInputValues: InputValues = {
         ...Object.fromEntries([...diagramRelated, ...diagramCCD].map(name => [name, ''])),
         checkedHelpless: [],
@@ -65,6 +84,7 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
         const fetchProfile = async () => {
             if (!isFetchedPatientProfile) {
                 await fetchPatientProfile(setPatientProfile);
+                await fetchPatientType(userId, chatId, setPatientType);
                 setIsFetchedPatientProfile(true);
             }
         };
@@ -108,6 +128,7 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
         // Check if ccdTruth already exists in KV database
         const fetchCCDTruth = async () => {
             const existingCCDTruth = await getCCDTruth(userId, chatId);
+            console.log(userId, chatId);
 
             if (!existingCCDTruth) {
                 // If ccdTruth is not in database, save ccdTruth according to current patientProfile
@@ -195,6 +216,9 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                 <h4 className="text-lg font-bold">Patient Intake and Cognitive Conceptualization Diagram</h4>
             </div>
             <div className="mb-2 px-5 space-y-6 overflow-auto">
+                <label className="block pt-1 leading-normal font-medium">
+                    <span className="font-bold">Patient Type: {patientType}</span>
+                </label>
                 <div className='-mb-4'>
                     <label className="block text-base font-bold text-blue-600">{diagramTitleMapping["relatedHistory"]}:</label>
                 </div>

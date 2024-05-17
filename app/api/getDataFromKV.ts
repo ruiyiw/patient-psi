@@ -3,9 +3,14 @@ import { patientTypes, patientTypeDescriptions } from "./data/patient-types";
 import { auth } from "@/auth";
 import { kv } from "@vercel/kv";
 import { profile } from "console";
-import fs from 'fs';
-import path from 'path';
 
+async function assignParticipantSessions(userId: string, sessions: string[]) {
+    const key = `assigned:${userId}`;
+    const value = {
+        'sessions': sessions
+    };
+    await kv.set(key, JSON.stringify(value));
+}
 
 async function getUserID(): Promise<string | null> {
     const session = await auth();
@@ -26,7 +31,6 @@ export async function getProfile(): Promise<PatientProfile | null> {
     const userID = await getUserID();
     const profileKey = `curr_profile_${userID}`;
     const profileData = await kv.get(profileKey);
-    // console.log(profileData);
     return profileData ? profileData as PatientProfile : null;
 }
 
@@ -78,53 +82,57 @@ export async function getPatientType(): Promise<string> {
 
 // }
 
+
 export async function sampleProfile(): Promise<PatientProfile | null> {
     try {
+        const userID = await getUserID() as string;
+        const userListString = await kv.get(`assigned:${userID}`);
+
+        if (userListString) {
+            const userList = userListString as { sessions: string[] };
+            if (userList.sessions.length > 0) {
+                const profileData = await kv.get(`profile_${userList.sessions[0]}`);
+                if (profileData) {
+                    const updatedSessions = userList.sessions.slice(1);
+                    assignParticipantSessions(userID, updatedSessions);
+                    try {
+                        return profileData as PatientProfile;
+                    } catch (error) {
+                        console.error('Error parsing profile data:', error);
+                        return null;
+                    }
+
+                }
+            }
+
+        }
+
         const all_keys = await kv.keys('profile_*');
 
         if (all_keys.length === 0) {
             throw new Error('No profiles found');
         }
 
-        const filePath = path.join(process.cwd(), 'app/api/data/participant-mapping.json');
-        const jsonData = fs.readFileSync(filePath, 'utf8');
-        const data = JSON.parse(jsonData);
-
-        const userID = await getUserID();
-
-        if (userID as string in data) {
-            const profileKey = 'profile_' + data[userID as string][0];
-            const profileData = await kv.get(profileKey);
-            console.log(profileData);
-            const value = data[userID as string];
-            const updatedValue = value.slice(1);
-            data[userID as string] = updatedValue;
-            fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-            console.log(profileKey + ' updated successfully');
-
-            try {
-                return profileData as PatientProfile;
-            } catch (error) {
-                console.error('Error parsing profile data:', error);
-                return null;
-            }
-        }
-
         const randomIndex = Math.floor(Math.random() * all_keys.length);
         const randomKey = all_keys[randomIndex];
-        const randomProfileData = await kv.get(randomKey);
+
+        const profileData = await kv.get(randomKey);
+
+        if (!profileData) {
+            return null;
+        }
 
         try {
-            return randomProfileData as PatientProfile;
+            return profileData as PatientProfile;
         } catch (error) {
             console.error('Error parsing profile data:', error);
             return null;
         }
-
     } catch (error) {
         console.error('Error sampling profile:', error);
         throw error;
     }
+
 }
 
 

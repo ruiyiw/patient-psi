@@ -61,6 +61,8 @@ export async function removeChat({ id, path }: { id: string; path: string }) {
 
   await kv.del(`chat:${id}`)
   await kv.zrem(`user:chat:${session.user.id}`, `chat:${id}`)
+  await kv.del(`ccdTruth:${session.user.id}:${id}`)
+  await kv.del(`ccdResult:${session.user.id}:${id}`)
 
   // remove corresponding diagram history
 

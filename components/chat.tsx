@@ -69,6 +69,7 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
 
   const handleSetPatientProfile = (patientProfile: PatientProfile) => {
     setPatientProfile(patientProfile);
+    console.log("profile");
     console.log(patientProfile);
   }
 

@@ -69,10 +69,10 @@ async function assignParticipantSessions(userId: string, sessions: string[]) {
 }
 
 
-// deleteAllProfilesFromKV();
+// deleteAllProfilesFromKV()k
 // storeDataToKV();
 // deleteCustomPrefixFromKV("");
-assignParticipantSessions("999999", ["1-1", "2-1", "3-1"]);
+assignParticipantSessions("220001", ["1-1", "2-1", "3-1"]);
 
 
 // Collection of kv keys

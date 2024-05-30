@@ -26,6 +26,7 @@ async function storeDataToKV() {
 }
 
 
+
 async function deleteAllProfilesFromKV() {
     try {
         const dataFilePath = path.join(process.cwd(), 'app/api/data', 'profiles.json');
@@ -72,7 +73,7 @@ async function assignParticipantSessions(userId: string, sessions: string[]) {
 // deleteAllProfilesFromKV()k
 // storeDataToKV();
 // deleteCustomPrefixFromKV("");
-assignParticipantSessions("220005", ["17-1", "18-1", "19-1"]);
+assignParticipantSessions("110007", ["18-2", "19-2", "20-2"]);
 
 
 // Collection of kv keys

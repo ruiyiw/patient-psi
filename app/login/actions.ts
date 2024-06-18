@@ -7,12 +7,16 @@ import { z } from 'zod'
 import { kv } from '@vercel/kv'
 import { ResultCode } from '@/lib/utils'
 
-export async function getUser(email: string) {
-  const user = await kv.hgetall<User>(`user:${email}`)
+// export async function getUser(email: string) {
+//   const user = await kv.hgetall<User>(`user:${email}`)
+//   return user
+// }
+export async function getUser(participantId: string) {
+  const user = await kv.hgetall<User>(`user:${participantId}`)
   return user
 }
 
-interface Result {
+export interface Result {
   type: string
   resultCode: ResultCode
 }
@@ -22,23 +26,27 @@ export async function authenticate(
   formData: FormData
 ): Promise<Result | undefined> {
   try {
-    const email = formData.get('email')
-    const password = formData.get('password')
+    // const email = formData.get('email')
+    // const password = formData.get('password')
+    const participantId = formData.get('participantId')
 
     const parsedCredentials = z
       .object({
-        email: z.string().email(),
-        password: z.string().min(6)
+        // email: z.string().email(),
+        // password: z.string().min(6)
+        participantId: z.string()
       })
       .safeParse({
-        email,
-        password
+        // email,
+        // password
+        participantId
       })
 
     if (parsedCredentials.success) {
       await signIn('credentials', {
-        email,
-        password,
+        // email,
+        // password,
+        participantId,
         redirect: false
       })
 

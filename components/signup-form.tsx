@@ -30,40 +30,22 @@ export default function SignupForm() {
       className="flex flex-col items-center gap-4 space-y-3"
     >
       <div className="w-full flex-1 rounded-lg border bg-white px-6 pb-4 pt-8 shadow-md md:w-96 dark:bg-zinc-950">
-        <h1 className="mb-3 text-2xl font-bold">Sign up for an account!</h1>
+        <h1 className="mb-3 text-2xl font-bold">Welcome to the study! Please sign up with your assigned Participant ID</h1>
         <div className="w-full">
           <div>
             <label
               className="mb-3 mt-5 block text-xs font-medium text-zinc-400"
-              htmlFor="email"
+              htmlFor="participantId"
             >
-              Email
+              Participant ID
             </label>
             <div className="relative">
               <input
                 className="peer block w-full rounded-md border bg-zinc-50 px-2 py-[9px] text-sm outline-none placeholder:text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950"
-                id="email"
-                type="email"
-                name="email"
-                placeholder="Enter your email address"
-                required
-              />
-            </div>
-          </div>
-          <div className="mt-4">
-            <label
-              className="mb-3 mt-5 block text-xs font-medium text-zinc-400"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <div className="relative">
-              <input
-                className="peer block w-full rounded-md border bg-zinc-50 px-2 py-[9px] text-sm outline-none placeholder:text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950"
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Enter password"
+                id="participantId"
+                type="participantId"
+                name="participantId"
+                placeholder="Please enter your assigned Participant ID"
                 required
                 minLength={6}
               />
@@ -74,7 +56,7 @@ export default function SignupForm() {
       </div>
 
       <Link href="/login" className="flex flex-row gap-1 text-sm text-zinc-400">
-        Already have an account?
+        Already signed up?
         <div className="font-semibold underline">Log in</div>
       </Link>
     </form>

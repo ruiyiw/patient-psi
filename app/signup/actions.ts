@@ -8,11 +8,13 @@ import { getUser } from '../login/actions'
 import { AuthError } from 'next-auth'
 
 export async function createUser(
-  email: string,
-  hashedPassword: string,
-  salt: string
+  participantId: string
+  // email: string,
+  // hashedPassword: string,
+  // salt: string
 ) {
-  const existingUser = await getUser(email)
+  // const existingUser = await getUser(email)
+  const existingUser = await getUser(participantId)
 
   if (existingUser) {
     return {
@@ -21,13 +23,15 @@ export async function createUser(
     }
   } else {
     const user = {
-      id: crypto.randomUUID(),
-      email,
-      password: hashedPassword,
-      salt
+      // id: crypto.randomUUID(),
+      id: participantId
+      // email,
+      // password: hashedPassword,
+      // salt
     }
 
-    await kv.hmset(`user:${email}`, user)
+    // await kv.hmset(`user:${email}`, user)
+    await kv.hmset(`user:${participantId}`, user)
 
     return {
       type: 'success',
@@ -45,37 +49,42 @@ export async function signup(
   _prevState: Result | undefined,
   formData: FormData
 ): Promise<Result | undefined> {
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
+  // const email = formData.get('email') as string
+  // const password = formData.get('password') as string
+  const participantId = formData.get('participantId') as string;
 
   const parsedCredentials = z
     .object({
-      email: z.string().email(),
-      password: z.string().min(6)
+      // email: z.string().email(),
+      // password: z.string().min(6)
+      participantId: z.string()
     })
     .safeParse({
-      email,
-      password
+      // email,
+      // password
+      participantId
     })
 
   if (parsedCredentials.success) {
-    const salt = crypto.randomUUID()
+    // const salt = crypto.randomUUID()
 
-    const encoder = new TextEncoder()
-    const saltedPassword = encoder.encode(password + salt)
-    const hashedPasswordBuffer = await crypto.subtle.digest(
-      'SHA-256',
-      saltedPassword
-    )
-    const hashedPassword = getStringFromBuffer(hashedPasswordBuffer)
+    // const encoder = new TextEncoder()
+    // const saltedPassword = encoder.encode(password + salt)
+    // const hashedPasswordBuffer = await crypto.subtle.digest(
+    //   'SHA-256',
+    //   saltedPassword
+    // )
+    // const hashedPassword = getStringFromBuffer(hashedPasswordBuffer)
 
     try {
-      const result = await createUser(email, hashedPassword, salt)
+      // const result = await createUser(email, hashedPassword, salt)
+      const result = await createUser(participantId);
 
       if (result.resultCode === ResultCode.UserCreated) {
         await signIn('credentials', {
-          email,
-          password,
+          // email,
+          // password,
+          participantId,
           redirect: false
         })
       }

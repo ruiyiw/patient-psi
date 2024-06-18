@@ -9,5 +9,11 @@ module.exports = {
         pathname: '**'
       }
     ]
+  },
+  serverRuntimeConfig: {
+    logger: {
+      level: 'info',
+    },
+    serverPath: 'app/api',
   }
 }

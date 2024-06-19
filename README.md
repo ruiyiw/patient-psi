@@ -16,6 +16,11 @@
 </p>
 <br/>
 
+# Installation
+```bash
+conda create -n patient-psi python=3.11.0
+```
+
 ## Features
 
 - [Next.js](https://nextjs.org) App Router

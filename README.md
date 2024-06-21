@@ -19,7 +19,7 @@
 ## Get started on Google Colab
 ## Get started on local computer
 ### Install
-We recommend starting a virtual environment with miniconda ([quick command line](https://docs.anaconda.com/miniconda/#quick-command-line-install)):
+We recommend starting a virtual environment with miniconda ([quick command line installation](https://docs.anaconda.com/miniconda/#quick-command-line-install)):
 ```bash
 conda create -n patient-psi python=3.11.0
 ```
@@ -31,11 +31,37 @@ pip install -r requirements.txt
 # Next.js dependencies
 conda install -c conda-forge nodejs
 npm install -g pnpm@8.7.4
-pnpm install
+npn install -g ts-node
+npm install -g vercel
 ```
 
 ### Set up Vercel app
-First, create a Vercel account via the [Vercel website](https://vercel.com/)
+First, create a Vercel account via the [Vercel website](https://vercel.com/). 
+Then, fork this repo, and create a Vercel project and a KV database linked to it. Follow the video clip for instructions.
+After this, go back to the terminal. Run `vercel link` and fill in the credentials to connect to the Vercel project just created. Under your forked repo, run the following to create a `.env.local` file with automatically imported environment variables of the KV database.
+```bash
+vercel env pull .env.local
+```
+You need to add two additional environment variables to the `.env.local` file manually. We provide an example at `.env.example`. 
+- `AUTH_SECRET`: use either `openssl rand -base64 32` or an [automatic generator](https://generate-secret.vercel.app/32) to generate a random secret.
+- `OPENAI_API_KEY`: plug in your OpenAI API key.
+
+Run the following commands under your forked repo to update the additional environment variables to the Vercel project settings. The Vercel app will prompt you to fill out the corresponding values and ask you to select the environments to add to. Please toggle all environments (production, development, preview).
+```bash
+vercel env add AUTH_SECRET
+vercel env add OPENAI_API_KEY
+```
+
+To check if the above setup is successful, go to your Vercel project page, and navigate to `Settings -> Environment Variables`, and there should be at least 6 key-value pairs as shown in `.env.local`.
+
+> Note: You should not commit your `.env` file anywhere.
+
+## Example Patient-Ψ-Trainer server
+Run the following to start the server on `localhost:8001`
+```bash
+pnpm install
+pnpm dev --port 8001
+```
 
 ## Features
 
@@ -83,10 +109,3 @@ pnpm dev
 
 Your app template should now be running on [localhost:3000](http://localhost:3000/).
 
-## Authors
-
-This library is created by [Vercel](https://vercel.com) and [Next.js](https://nextjs.org) team members, with contributions from:
-
-- Jared Palmer ([@jaredpalmer](https://twitter.com/jaredpalmer)) - [Vercel](https://vercel.com)
-- Shu Ding ([@shuding\_](https://twitter.com/shuding_)) - [Vercel](https://vercel.com)
-- shadcn ([@shadcn](https://twitter.com/shadcn)) - [Vercel](https://vercel.com)

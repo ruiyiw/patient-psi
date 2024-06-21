@@ -9,7 +9,7 @@ const path = require('path');
 
 async function storeDataToKV() {
     try {
-        const dataFilePath = path.join(process.cwd(), 'app/api/data', 'profiles_8_16.json');
+        const dataFilePath = path.join(process.cwd(), 'python/data', 'profiles.json');
         const jsonData = JSON.parse(await readFile(dataFilePath, 'utf8'));
 
         for (const profile of jsonData) {
@@ -70,10 +70,7 @@ async function assignParticipantSessions(userId: string, sessions: string[]) {
 }
 
 
-// deleteAllProfilesFromKV()
-// storeDataToKV();
-// deleteCustomPrefixFromKV("type:888888:*");
-assignParticipantSessions("110013", ["30-2", "31-2", "32-2"]);
+storeDataToKV();
 
 
 // Collection of kv keys

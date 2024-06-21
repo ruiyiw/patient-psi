@@ -16,10 +16,26 @@
 </p>
 <br/>
 
-# Installation
+## Get started on Google Colab
+## Get started on local computer
+### Install
+We recommend starting a virtual environment with miniconda ([quick command line](https://docs.anaconda.com/miniconda/#quick-command-line-install)):
 ```bash
 conda create -n patient-psi python=3.11.0
 ```
+Then install requirements for python3 and for Next.js-based [Vercel app](https://vercel.com/). 
+```bash
+# Python packages
+pip install -r requirements.txt
+
+# Next.js dependencies
+conda install -c conda-forge nodejs
+npm install -g pnpm@8.7.4
+pnpm install
+```
+
+### Set up Vercel app
+First, create a Vercel account via the [Vercel website](https://vercel.com/)
 
 ## Features
 

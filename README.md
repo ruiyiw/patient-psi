@@ -93,9 +93,9 @@ python3 -m generation.generate --transcript-file "example_transcript.txt" --out-
 > Note: You should not commit you `.env` file anywhere. Make sure to update the variables in `python/.env` if you want to use your custom folder.
 
 ## Prompts for Patient-Ψ
-The prompts for different conversational styles can be found in:
+The prompts for different conversational styles can be found in [this folder](https://github.com/ruiyiw/patient-psi/tree/main/app/api/data)
 
-The prompts for simulating a patient with a cognitive model can be found in: 
+The prompts for simulating a patient with a cognitive model can be found in [this function](https://github.com/ruiyiw/patient-psi/blob/284444a1a8649dbe514aa191c4592c7cc6812bd3/app/api/getDataFromKV.ts#L147)
 
 ## Citation
 ```bibtex

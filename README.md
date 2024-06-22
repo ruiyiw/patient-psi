@@ -61,7 +61,7 @@ Run the following commands under your forked repo to update the additional envir
 vercel env add AUTH_SECRET
 vercel env add OPENAI_API_KEY
 ```
-To check if the above setup is successful, go to your Vercel project page, and navigate to `Settings -> Environment Variables`, and there should be at least 6 key-value pairs as shown in `.env.local`.
+To check if the above setup is successful, go to your Vercel project page, and navigate to `Settings -> Environment Variables`, and there should be at least 6 key-value pairs as shown in `.env.example`.
 
 > Note: You should not commit your `.env` file anywhere.
 

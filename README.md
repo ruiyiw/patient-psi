@@ -1,29 +1,31 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="https://chat.vercel.ai/opengraph-image.png">
-  <h1 align="center">Next.js AI Chatbot</h1>
-</a>
+<div style="width: 100%;">
+  <img src="title.png" style="width: 100%;" alt="patient-psi"></img>
+</div>
 
-<p align="center">
-  An open-source AI chatbot app template built with Next.js, the Vercel AI SDK, OpenAI, and Vercel KV.
-</p>
+# Patient-Ψ: Using Large Language Models to Simulate Patients for Training Mental Health Professionals
+[![Paper PDF](https://img.shields.io/badge/Paper-PDF-red.svg)](https://arxiv.org/pdf/2405.19660) [![huggingface](https://img.shields.io/badge/%F0%9F%A4%97-Data-yellow)]() [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3109/) [![twitter](https://img.shields.io/badge/Twitter-Thread-cyan)]() [![Code License](https://img.shields.io/badge/Code%20License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a> ·
-  <a href="#authors"><strong>Authors</strong></a>
-</p>
-<br/>
+## 📌 Table of Contents
+- [Get started on local computer](#get-started-on-local-computer)
+  - [Install](#install)
+  - [Set up Vercel app](#set-up-vercel-app)
+- [Quickly start the Patient-Ψ-Trainer](#quickly-start-the-patient-ψ-trainer)
+- [Cognitive model generation - Patient-Ψ-CM dataset](#cognitive-model-generation---patient-ψ-cm-dataset)
+- [Prompts for Patient-Ψ](#prompts-for-patient-ψ)
+- [Citation](#citation)
 
-## Get started on Google Colab
 ## Get started on local computer
+
 ### Install
+
 We recommend starting a virtual environment with miniconda ([quick command line installation](https://docs.anaconda.com/miniconda/#quick-command-line-install)):
+
 ```bash
 conda create -n patient-psi python=3.11.0
 ```
-Then install requirements for python3 and for Next.js-based [Vercel app](https://vercel.com/). 
+
+Then install requirements for python3 and for Next.js-based [Vercel app](https://vercel.com/).
+
 ```bash
 # Python packages
 pip install -r requirements.txt
@@ -36,13 +38,21 @@ npm install -g vercel
 ```
 
 ### Set up Vercel app
-First, create a Vercel account via the [Vercel website](https://vercel.com/). 
+
+First, create a Vercel account via the [Vercel website](https://vercel.com/).
+
 Then, fork this repo, and create a Vercel project and a KV database linked to it. Follow the video clip for instructions.
-After this, go back to the terminal. Run `vercel link` and fill in the credentials to connect to the Vercel project just created. Under your forked repo, run the following to create a `.env.local` file with automatically imported environment variables of the KV database.
+
+[![video clip](https://img.youtube.com/vi/HkmghKHsQgU/0.jpg)](https://www.youtube.com/watch?v=HkmghKHsQgU)
+
+After this, go back to the terminal. Run `vercel link` and fill in the credentials to connect to the Vercel project just created. 
+
+Under your forked repo, run the following to create a `.env.local` file with automatically imported environment variables of the KV database.
 ```bash
 vercel env pull .env.local
 ```
-You need to add two additional environment variables to the `.env.local` file manually. We provide an example at `.env.example`. 
+You need to add two additional environment variables to the `.env.local` file manually. We provide an example at `.env.example`.
+
 - `AUTH_SECRET`: use either `openssl rand -base64 32` or an [automatic generator](https://generate-secret.vercel.app/32) to generate a random secret.
 - `OPENAI_API_KEY`: plug in your OpenAI API key.
 
@@ -51,61 +61,50 @@ Run the following commands under your forked repo to update the additional envir
 vercel env add AUTH_SECRET
 vercel env add OPENAI_API_KEY
 ```
-
 To check if the above setup is successful, go to your Vercel project page, and navigate to `Settings -> Environment Variables`, and there should be at least 6 key-value pairs as shown in `.env.local`.
 
 > Note: You should not commit your `.env` file anywhere.
 
-## Example Patient-Ψ-Trainer server
-Run the following to start the server on `localhost:8001`
+## Quickly start the Patient-Ψ-Trainer
+After setting up the Vercel app, you can quickly upload sample cognitive models to the KV database and start the Patient-Ψ-Trainer powered by GPT-4. 
+
+We provide example patient cognitive models in file `python/data/profiles.json`, which are publically available on [Beck Institute website](https://beckinstitute.org/wp-content/uploads/2021/08/Abes-CCD.pdf).
+
+First, upload the profiles to your KV database by running the code.
+```bash
+ts-node lib/utils/kvDatabaseFunctions.ts 
+```
+Second, run the following to start the server on `localhost:8001`.
 ```bash
 pnpm install
 pnpm dev --port 8001
 ```
+The app should be started on [http://localhost:8001/signup](http://localhost:8001/signup). Please sign up with any 6 characters at minimum.
 
-## Features
+## Cognitive model generation - Patient-Ψ-CM dataset
+Folder `python/` contains the code for producing the Patient-Ψ-CM dataset. We provide an example transcript excerpt from CBT therapy, which is publicly available on [Beck Institute website](https://beckinstitute.org/beck-institute-role-play-transcript-abe-therapy-session-2/). 
 
-- [Next.js](https://nextjs.org) App Router
-- React Server Components (RSCs), Suspense, and Server Actions
-- [Vercel AI SDK](https://sdk.vercel.ai/docs) for streaming chat UI
-- Support for OpenAI (default), Anthropic, Cohere, Hugging Face, or custom AI chat models and/or LangChain
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - [Radix UI](https://radix-ui.com) for headless component primitives
-  - Icons from [Phosphor Icons](https://phosphoricons.com)
-- Chat History, rate limiting, and session storage with [Vercel KV](https://vercel.com/storage/kv)
-- [NextAuth.js](https://github.com/nextauthjs/next-auth) for authentication
-
-## Model Providers
-
-This template ships with OpenAI `gpt-3.5-turbo` as the default. However, thanks to the [Vercel AI SDK](https://sdk.vercel.ai/docs), you can switch LLM providers to [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), [Hugging Face](https://huggingface.co), or using [LangChain](https://js.langchain.com) with just a few lines of code.
-
-## Deploy Your Own
-
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?demo-title=Next.js+Chat&demo-description=A+full-featured%2C+hackable+Next.js+AI+chatbot+built+by+Vercel+Labs&demo-url=https%3A%2F%2Fchat.vercel.ai%2F&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4aVPvWuTmBvzM5cEdRdqeW%2F4234f9baf160f68ffb385a43c3527645%2FCleanShot_2023-06-16_at_17.09.21.png&project-name=Next.js+Chat&repository-name=nextjs-chat&repository-url=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fai-chatbot&from=templates&skippable-integrations=1&env=OPENAI_API_KEY%2CAUTH_SECRET&envDescription=How+to+get+these+env+vars&envLink=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fai-chatbot%2Fblob%2Fmain%2F.env.example&teamCreateStatus=hidden&stores=[{"type":"kv"}])
-
-## Creating a KV Database Instance
-
-Follow the steps outlined in the [quick start guide](https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database) provided by Vercel. This guide will assist you in creating and configuring your KV database instance on Vercel, enabling your application to interact with it.
-
-Remember to update your environment variables (`KV_URL`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `KV_REST_API_READ_ONLY_TOKEN`) in the `.env` file with the appropriate credentials provided during the KV database setup.
-
-## Running locally
-
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
-
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various OpenAI and authentication provider accounts.
-
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
-
+Run the following commands to construct the cognitive models. Make sure you update the `OPENAI_API_KEY` in `python/.env` 
 ```bash
-pnpm install
-pnpm dev
+cd python
+python3 -m generation.generate --transcript-file "example_transcript.txt" --out-file "example_CCD_from_transcript.json"
 ```
 
-Your app template should now be running on [localhost:3000](http://localhost:3000/).
+> Note: You should not commit you `.env` file anywhere. Make sure to update the variables in `python/.env` if you want to use your custom folder.
 
+## Prompts for Patient-Ψ
+The prompts for different conversational styles can be found in:
+
+The prompts for simulating a patient with a cognitive model can be found in: 
+
+## Citation
+```bibtex
+@misc{wang2024patientpsi,
+      title={PATIENT-{\Psi}: Using Large Language Models to Simulate Patients for Training Mental Health Professionals}, 
+      author={Ruiyi Wang and Stephanie Milani and Jamie C. Chiu and Jiayin Zhi and Shaun M. Eack and Travis Labrum and Samuel M. Murphy and Nev Jones and Kate Hardy and Hong Shen and Fei Fang and Zhiyu Zoey Chen},
+      year={2024},
+      eprint={2405.19660},
+      archivePrefix={arXiv},
+      primaryClass={id='cs.CL' full_name='Computation and Language' is_active=True alt_name='cmp-lg' in_archive='cs' is_general=False description='Covers natural language processing. Roughly includes material in ACM Subject Class I.2.7. Note that work on artificial languages (programming languages, logics, formal systems) that does not explicitly address natural-language issues broadly construed (natural-language processing, computational linguistics, speech, text retrieval, etc.) is not appropriate for this area.'}
+}
+```

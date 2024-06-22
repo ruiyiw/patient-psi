@@ -38,6 +38,8 @@ yarn-error.log*
 .env*.local
 *.json
 !profiles.json
+!.env.example
+!python/.env
 
 
 # cache

@@ -82,6 +82,8 @@ pnpm dev --port 8001
 The app should be started on [http://localhost:8001/signup](http://localhost:8001/signup). Please sign up with any 6 characters at minimum.
 
 ## Cognitive model generation - Patient-Ψ-CM dataset
+**To get access to the Patient-Ψ-CM dataset, please fill out this form: https://forms.gle/pQ3g6YVFrEWjBU2H7.**
+
 Folder `python/` contains the code for producing the Patient-Ψ-CM dataset. We provide an example transcript excerpt from CBT therapy, which is publicly available on [Beck Institute website](https://beckinstitute.org/beck-institute-role-play-transcript-abe-therapy-session-2/). 
 
 Run the following commands to construct the cognitive models. Make sure you update the `OPENAI_API_KEY` in `python/.env` 

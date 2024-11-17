@@ -101,12 +101,29 @@ The prompts for simulating a patient with a cognitive model can be found in [thi
 
 ## Citation
 ```bibtex
-@misc{wang2024patientpsi,
-      title={PATIENT-{\Psi}: Using Large Language Models to Simulate Patients for Training Mental Health Professionals}, 
-      author={Ruiyi Wang and Stephanie Milani and Jamie C. Chiu and Jiayin Zhi and Shaun M. Eack and Travis Labrum and Samuel M. Murphy and Nev Jones and Kate Hardy and Hong Shen and Fei Fang and Zhiyu Zoey Chen},
-      year={2024},
-      eprint={2405.19660},
-      archivePrefix={arXiv},
-      primaryClass={id='cs.CL' full_name='Computation and Language' is_active=True alt_name='cmp-lg' in_archive='cs' is_general=False description='Covers natural language processing. Roughly includes material in ACM Subject Class I.2.7. Note that work on artificial languages (programming languages, logics, formal systems) that does not explicitly address natural-language issues broadly construed (natural-language processing, computational linguistics, speech, text retrieval, etc.) is not appropriate for this area.'}
+@inproceedings{wang-etal-2024-patient,
+    title = "{PATIENT}-$\psi$: Using Large Language Models to Simulate Patients for Training Mental Health Professionals",
+    author = "Wang, Ruiyi  and
+      Milani, Stephanie  and
+      Chiu, Jamie C.  and
+      Zhi, Jiayin  and
+      Eack, Shaun M.  and
+      Labrum, Travis  and
+      Murphy, Samuel M  and
+      Jones, Nev  and
+      Hardy, Kate V  and
+      Shen, Hong  and
+      Fang, Fei  and
+      Chen, Zhiyu",
+    editor = "Al-Onaizan, Yaser  and
+      Bansal, Mohit  and
+      Chen, Yun-Nung",
+    booktitle = "Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing",
+    month = nov,
+    year = "2024",
+    address = "Miami, Florida, USA",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.emnlp-main.711",
+    pages = "12772--12797",
 }
 ```

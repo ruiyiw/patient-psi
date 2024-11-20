@@ -11,7 +11,7 @@ import { Toaster } from '@/components/ui/sonner'
 export const metadata = {
   metadataBase: new URL(`https://${process.env.VERCEL_URL}`),
   title: {
-    default: 'Gem City Mental',
+    default: 'Gem City Patient',
     template: `%s - Gem City AI Chatbot`
   },
   description: 'An AI-powered chatbot template built by Gem City.',

@@ -137,7 +137,7 @@ export async function shareChat(id: string) {
 export async function saveChat(chat: Chat) {
   const session = await auth()
 
-  if (session && session.user) {
+  if (session?.user) {
     const pipeline = kv.pipeline()
     pipeline.hmset(`chat:${chat.id}`, chat)
     pipeline.zadd(`user:chat:${chat.userId}`, {
@@ -145,9 +145,9 @@ export async function saveChat(chat: Chat) {
       member: `chat:${chat.id}`
     })
     await pipeline.exec()
-  } else {
-    return
+    return;
   }
+  return
 }
 
 export async function refreshHistory(path: string) {
@@ -166,25 +166,21 @@ export async function getCCDResult(userId: string, chatId: string) {
   const ccdResultKey = `ccdResult:${userId}:${chatId}`;
   const ccdResult = await kv.hgetall<CCDResult>(ccdResultKey);
 
-  if (ccdResult && Object.keys(ccdResult).length > 0) {
-    return ccdResult;
-  } else {
-    return null;
-  }
+  return ccdResult && Object.keys(ccdResult).length > 0 ? ccdResult : null;
 }
 
 
 export async function saveCCDResult(ccdResult: CCDResult) {
   const session = await auth()
 
-  if (session && session.user) {
+  if (session?.user) {
     const pipeline = kv.pipeline()
     const ccdResultKey = `ccdResult:${ccdResult.userId}:${ccdResult.chatId}`;
     pipeline.hmset(ccdResultKey, ccdResult)
     await pipeline.exec()
-  } else {
-    return
+    return;
   }
+  return
 }
 
 
@@ -192,29 +188,24 @@ export async function getCCDTruth(userId: string, chatId: string) {
   const ccdTruthKey = `ccdTruth:${userId}:${chatId}`;
   const ccdTruth = await kv.hgetall<CCDTruth>(ccdTruthKey);
 
-  if (ccdTruth && Object.keys(ccdTruth).length > 0) {
-    return ccdTruth;
-  } else {
-    return null;
-  }
+  return ccdTruth && Object.keys(ccdTruth).length > 0 ? ccdTruth : null;
 }
 
 
 export async function saveCCDTruth(ccdTruth: CCDTruth) {
   const session = await auth()
 
-  if (session && session.user) {
+  if (session?.user) {
     const pipeline = kv.pipeline()
     const ccdTruthKey = `ccdTruth:${ccdTruth.userId}:${ccdTruth.chatId}`;
     pipeline.hmset(ccdTruthKey, ccdTruth)
     await pipeline.exec()
-  } else {
-    return
+    return;
   }
+  return
 }
 
 
 export async function getProfileData() {
-  const key = "alex_data"
 
 }

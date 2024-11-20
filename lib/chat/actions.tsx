@@ -21,6 +21,7 @@ import { getPrompt } from '@/app/api/getDataFromKV'
 
 
 const openai = new OpenAI({
+  baseURL: 'https://api.gemcity.xyz',
   apiKey: process.env.OPENAI_API_KEY || ''
 })
 
@@ -46,7 +47,7 @@ async function submitUserMessage(content: string, type: string) {
   let textNode: undefined | React.ReactNode
 
   const ui = render({
-    model: 'gpt-4',
+    model: 'heallama',
     provider: openai,
     initial: <SpinnerMessage />,
     messages: [
@@ -121,12 +122,11 @@ export const AI = createAI<AIState, UIState>({
 
     const session = await auth()
 
-    if (session && session.user) {
+    if (session?.user) {
       const aiState = getAIState()
 
       if (aiState) {
-        const uiState = getUIStateFromAIState(aiState)
-        return uiState
+        return getUIStateFromAIState(aiState)
       }
     } else {
       return
@@ -137,7 +137,7 @@ export const AI = createAI<AIState, UIState>({
 
     const session = await auth()
 
-    if (session && session.user) {
+    if (session?.user) {
       const { chatId, messages } = state
 
       const createdAt = new Date()
@@ -155,9 +155,9 @@ export const AI = createAI<AIState, UIState>({
       }
 
       await saveChat(chat)
-    } else {
-      return
+      return;
     }
+    return
   }
 })
 

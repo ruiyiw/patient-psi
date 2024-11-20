@@ -13,6 +13,14 @@ export interface ChatPageProps {
   }
 }
 
+// Update the Message type to exclude "function"
+type Message = {
+  id: string; // Added "id" property
+  role: "user" | "system" | "assistant" | "data"; // Removed "function"
+  content: string;
+  // ... other properties ...
+}
+
 export async function generateMetadata({
   params
 }: ChatPageProps): Promise<Metadata> {
@@ -48,11 +56,11 @@ export default async function ChatPage({ params }: ChatPageProps) {
   }
 
   return (
-    <AI initialAIState={{ chatId: chat.id, messages: chat.messages }}>
+    <AI initialAIState={{ chatId: chat.id, messages: chat.messages as Message[] }}>
       <Chat
         id={chat.id}
         session={session}
-        initialMessages={chat.messages}
+        initialMessages={chat.messages as Message[]}
         missingKeys={missingKeys}
       />
     </AI>

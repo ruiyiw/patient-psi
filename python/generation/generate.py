@@ -10,10 +10,17 @@ import logging
 # Load dotenv
 load_dotenv()
 
+# Ensure environment variables are set
+data_path_env = os.getenv('DATA_PATH')
+out_path_env = os.getenv('OUT_PATH')
+
+if data_path_env is None or out_path_env is None:
+    raise ValueError("Environment variables DATA_PATH and OUT_PATH must be set.")
+
 data_path = os.path.join(os.path.dirname(
-    os.path.abspath('.env')), os.getenv('DATA_PATH'))
+    os.path.abspath('.env')), data_path_env)
 out_path = os.path.join(os.path.dirname(
-    os.path.abspath('.env')), os.getenv('OUT_PATH'))
+    os.path.abspath('.env')), out_path_env)
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -43,15 +50,15 @@ def generate_chain(transcript_file, out_file):
         "format_instructions": pydantic_parser.get_format_instructions()
     })
     llm = ChatOpenAI(
-        model=os.getenv('GENERATOR_MODEL'),
-        temperature=os.getenv('GENERATOR_MODEL_TEMP'),
+        model=os.getenv('GENERATOR_MODEL') or "default_model",
+        temperature=float(os.getenv('GENERATOR_MODEL_TEMP', 0.7)),
         max_retries=2,
     )
     attempts = 0
 
-    while attempts < int(os.getenv('MAX_ATTEMPTS')):
+    while attempts < int(os.getenv('MAX_ATTEMPTS', 3)):
         _output = pydantic_parser.parse(
-            llm.invoke(_input).content).model_dump()
+            str(llm.invoke(_input).content)).model_dump()
         print(_output)
         if is_json_serializable(_output):
             with open(os.path.join(out_path, out_file), 'w') as f:
@@ -61,8 +68,8 @@ def generate_chain(transcript_file, out_file):
         else:
             attempts += 1
             logger.warning(
-                f"Output is not JSON serializable. Attempting {attempts}/{int(os.getenv('MAX_ATTEMPTS'))}")
-            if attempts == int(os.getenv('MAX_ATTEMPTS')):
+                f"Output is not JSON serializable. Attempting {attempts}/{int(os.getenv('MAX_ATTEMPTS', 3))}")
+            if attempts == int(os.getenv('MAX_ATTEMPTS', 3)):
                 logger.error(
                     "Max attempts reached. Could not generate a JSON serializable output.")
                 raise ValueError(

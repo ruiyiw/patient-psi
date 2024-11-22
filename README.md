@@ -73,7 +73,7 @@ To check if the above setup is successful, go to your Vercel project page, and n
 
 After setting up the Vercel app, you can quickly upload sample cognitive models to the KV database and start the Patient-Ψ-Trainer powered by GPT-4.
 
-We provide example patient cognitive models in file `python/data/profiles.json`, which are publically available on [Beck Institute website](https://beckinstitute.org/wp-content/uploads/2021/08/Abes-CCD.pdf).
+We provide example patient cognitive models in file `python/data/profiles.json`, which are publicly available on [Beck Institute website](https://beckinstitute.org/wp-content/uploads/2021/08/Abes-CCD.pdf).
 
 First, upload the profiles to your KV database by running the code.
 

@@ -63,12 +63,12 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
     if (typeof window === 'undefined') {
       return
     }
-    const fileExtension = programmingLanguages[language] || '.file'
-    const suggestedFileName = `file-${generateRandomString(
+    const fileExtension: string = programmingLanguages[language] || '.file'
+    const suggestedFileName: string = `file-${generateRandomString(
       3,
       true
     )}${fileExtension}`
-    const fileName = window.prompt('Enter file name' || '', suggestedFileName)
+    const fileName = window.prompt('Enter file name', suggestedFileName)
 
     if (!fileName) {
       // User pressed cancel on prompt.

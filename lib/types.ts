@@ -1,5 +1,5 @@
 import { Message } from 'ai'
-import type { DefaultSession } from '@/node_modules/.pnpm/@auth+core@0.18.4/node_modules/@auth/core/types';
+import type { DefaultSession } from '@/node_modules/.pnpm/@auth+core@0.18.4/node_modules/@auth/core/types'
 
 export interface Chat extends Record<string, any> {
   id: string
@@ -12,55 +12,55 @@ export interface Chat extends Record<string, any> {
 }
 
 export interface CCDResult extends Record<string, any> {
-  userId: string;
-  chatId: string;
-  createdAt: Date;
+  userId: string
+  chatId: string
+  createdAt: Date
   checkedHelpless: {
-    id: string;
-    label: string;
-  }[];
+    id: string
+    label: string
+  }[]
   checkedUnlovable: {
-    id: string;
-    label: string;
-  }[];
+    id: string
+    label: string
+  }[]
   checkedWorthless: {
-    id: string;
-    label: string;
-  }[];
-  intermediateBelief: string;
-  intermediateBeliefDepression: string;
-  copingStrategies: string;
-  situation: string;
-  autoThought: string;
+    id: string
+    label: string
+  }[]
+  intermediateBelief: string
+  intermediateBeliefDepression: string
+  copingStrategies: string
+  situation: string
+  autoThought: string
   checkedEmotion: {
-    id: string;
-    label: string;
-  }[];
-  behavior: string;
+    id: string
+    label: string
+  }[]
+  behavior: string
 }
 
 export interface CCDTruth extends Record<string, any> {
-  userId: string;
-  chatId: string;
-  createdAt: Date;
-  relatedHistory: string;
-  Helpless: [string];
-  Unlovable: [string];
-  Worthless: [string];
-  intermediateBelief: string;
-  intermediateBeliefDepression: string;
-  copingStrategies: string;
-  situation: string;
-  autoThought: string;
-  Emotion: [string];
-  behavior: string;
+  userId: string
+  chatId: string
+  createdAt: Date
+  relatedHistory: string
+  Helpless: [string]
+  Unlovable: [string]
+  Worthless: [string]
+  intermediateBelief: string
+  intermediateBeliefDepression: string
+  copingStrategies: string
+  situation: string
+  autoThought: string
+  Emotion: [string]
+  behavior: string
 }
 
 export type ServerActionResult<Result> = Promise<
   | Result
   | {
-    error: string
-  }
+      error: string
+    }
 >
 
 export interface Session {

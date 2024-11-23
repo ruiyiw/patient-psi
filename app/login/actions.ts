@@ -12,8 +12,7 @@ import { ResultCode } from '@/lib/utils'
 //   return user
 // }
 export async function getUser(participantId: string) {
-  const user = await kv.hgetall<User>(`user:${participantId}`)
-  return user
+  return await kv.hgetall<User>(`user:${participantId}`)
 }
 
 export interface Result {
@@ -62,18 +61,15 @@ export async function authenticate(
     }
   } catch (error) {
     if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return {
+      return error.type === 'CredentialsSignin'
+        ? {
             type: 'error',
             resultCode: ResultCode.InvalidCredentials
           }
-        default:
-          return {
+        : {
             type: 'error',
             resultCode: ResultCode.UnknownError
           }
-      }
     }
   }
 }

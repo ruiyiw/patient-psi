@@ -51,7 +51,7 @@ export async function signup(
 ): Promise<Result | undefined> {
   // const email = formData.get('email') as string
   // const password = formData.get('password') as string
-  const participantId = formData.get('participantId') as string;
+  const participantId = formData.get('participantId') as string
 
   const parsedCredentials = z
     .object({
@@ -78,7 +78,7 @@ export async function signup(
 
     try {
       // const result = await createUser(email, hashedPassword, salt)
-      const result = await createUser(participantId);
+      const result = await createUser(participantId)
 
       if (result.resultCode === ResultCode.UserCreated) {
         await signIn('credentials', {

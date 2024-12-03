@@ -89,7 +89,7 @@ export function CheckboxReactHookFormMultiple({ category, onCheckboxChange, chec
                     </div>
                     <CollapsibleTrigger asChild>
                         <Button variant="ghost" size="sm" className="w-9 p-0 hover:bg-gray-200">
-                            <ChevronsUpDown className="h-5 w-5" />
+                            <ChevronsUpDown className="size-5" />
                             <span className="sr-only">Toggle</span>
                         </Button>
                     </CollapsibleTrigger>
@@ -157,4 +157,3 @@ export function CheckboxReactHookFormMultiple({ category, onCheckboxChange, chec
         </div >
     )
 }
-

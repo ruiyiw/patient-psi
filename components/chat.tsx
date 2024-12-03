@@ -4,11 +4,10 @@ import { cn } from '@/lib/utils'
 import { ChatList } from '@/components/chat-list'
 import { ChatPanel } from '@/components/chat-panel'
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
-import { useEffect, useState } from 'react'
-import { useUIState, useAIState } from 'ai/rsc'
-import { Session } from '@/lib/types'
+import { useEffect, useState, useRef } from 'react'
+import { useUIState, useAIState, useActions } from 'ai/rsc'
+import { Session, AIMessage } from '@/lib/types'
 import { usePathname, useRouter } from 'next/navigation'
-import { Message } from '@/lib/chat/actions'
 import { useScrollAnchor } from '@/lib/hooks/use-scroll-anchor'
 import { toast } from 'sonner'
 import { StartSession } from './start-session'
@@ -17,13 +16,13 @@ import { DiagramList } from './diagram-list'
 import { PatientProfile, initialProfile } from '@/app/api/data/patient-profiles'
 
 export interface ChatProps extends React.ComponentProps<'div'> {
-  initialMessages?: Message[]
   id?: string
-  session?: Session
+  session: Session
+  initialMessages?: AIMessage[]
   missingKeys: string[]
 }
 
-export function Chat({ id, className, session, missingKeys }: ChatProps) {
+export function Chat({ id, className, session, missingKeys, initialMessages }: ChatProps) {
   const router = useRouter()
   const path = usePathname()
   const [input, setInput] = useState('')
@@ -33,7 +32,6 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
   const [_, setNewChatId] = useLocalStorage('newChatId', id)
   const [isStarted, setIsStarted] = useState(false);
   const [patientProfile, setPatientProfile] = useState<PatientProfile>(initialProfile);
-
 
   useEffect(() => {
     if (session?.user) {
@@ -72,7 +70,6 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
     console.log("profile");
     console.log(patientProfile);
   }
-
 
   return (
     <>

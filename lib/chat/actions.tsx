@@ -11,7 +11,7 @@ import {
 import { nanoid } from '@/lib/utils'
 import { saveChat } from '@/app/actions'
 import { SpinnerMessage, UserMessage, BotMessage } from '@/components/message'
-import { Chat } from '@/lib/types'
+import { Chat, AIMessage } from '@/lib/types'
 import { auth } from '@/auth'
 import { getPrompt } from '@/app/api/getDataFromKV'
 
@@ -163,7 +163,7 @@ async function submitUserMessage(content: string, type: string) {
       ...aiState.get().messages,
       {
         id: nanoid(),
-        role: 'user',
+        role: 'user' as const,
         content,
       }
     ]
@@ -178,10 +178,10 @@ async function submitUserMessage(content: string, type: string) {
     initial: <SpinnerMessage />,
     messages: [
       {
-        role: 'system',
+        role: 'system' as const,
         content: await getPrompt()
       },
-      ...aiState.get().messages.map((message: any) => ({
+      ...aiState.get().messages.map((message: AIMessage) => ({
         role: message.role,
         content: message.content,
         name: message.name
@@ -201,7 +201,7 @@ async function submitUserMessage(content: string, type: string) {
             ...aiState.get().messages,
             {
               id: nanoid(),
-              role: 'assistant',
+              role: 'assistant' as const,
               content,
             }
           ]
@@ -220,24 +220,17 @@ async function submitUserMessage(content: string, type: string) {
   }
 }
 
-export type Message = {
-  role: 'user' | 'assistant' | 'system' | 'data'
-  content: string
-  id: string
-  name?: string
-}
-
-export type AIState = {
+interface AIState {
   chatId: string
-  messages: Message[]
+  messages: AIMessage[]
 }
 
-export type UIState = {
+export interface UIState {
   id: string
   display: React.ReactNode
-}[]
+}
 
-export const AI = createAI<AIState, UIState>({
+export const AI = createAI<AIState, UIState[]>({
   actions: {
     submitUserMessage
   },

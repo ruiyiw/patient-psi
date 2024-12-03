@@ -4,13 +4,13 @@ import { Session } from '@/lib/types'
 import Link from 'next/link'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
-export interface ChatList {
-  messages: UIState
+export interface ChatListProps {
+  messages: UIState[]
   session?: Session
   isShared: boolean
 }
 
-export function ChatList({ messages, session, isShared }: ChatList) {
+export function ChatList({ messages, session, isShared }: ChatListProps) {
   if (!messages.length) {
     return null
   }

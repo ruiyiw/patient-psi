@@ -155,12 +155,11 @@ export async function refreshHistory(path: string) {
 }
 
 export async function getMissingKeys() {
-  const keysRequired = ['OPENAI_API_KEY']
+  const keysRequired = ['OLLAMA_BASE_URL']
   return keysRequired
     .map(key => (process.env[key] ? '' : key))
     .filter(key => key !== '')
 }
-
 
 export async function getCCDResult(userId: string, chatId: string) {
   const ccdResultKey = `ccdResult:${userId}:${chatId}`;
@@ -172,7 +171,6 @@ export async function getCCDResult(userId: string, chatId: string) {
     return null;
   }
 }
-
 
 export async function saveCCDResult(ccdResult: CCDResult) {
   const session = await auth()
@@ -187,7 +185,6 @@ export async function saveCCDResult(ccdResult: CCDResult) {
   }
 }
 
-
 export async function getCCDTruth(userId: string, chatId: string) {
   const ccdTruthKey = `ccdTruth:${userId}:${chatId}`;
   const ccdTruth = await kv.hgetall<CCDTruth>(ccdTruthKey);
@@ -198,7 +195,6 @@ export async function getCCDTruth(userId: string, chatId: string) {
     return null;
   }
 }
-
 
 export async function saveCCDTruth(ccdTruth: CCDTruth) {
   const session = await auth()
@@ -212,7 +208,6 @@ export async function saveCCDTruth(ccdTruth: CCDTruth) {
     return
   }
 }
-
 
 export async function getProfileData() {
   const key = "alex_data"

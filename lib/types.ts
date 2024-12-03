@@ -7,8 +7,15 @@ export interface Chat extends Record<string, any> {
   createdAt: Date
   userId: string
   path: string
-  messages: Message[]
+  messages: AIMessage[]
   sharePath?: string
+}
+
+export type AIMessage = {
+  id?: string
+  role: 'system' | 'user' | 'assistant' | 'data' | 'function' | 'tool'
+  content: string
+  name?: string
 }
 
 export interface CCDResult extends Record<string, any> {

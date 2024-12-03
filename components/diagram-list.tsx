@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import { CheckboxReactHookFormMultiple } from './diagram-checkbox'
 import { diagramRelated, diagramCCD, diagramDescriptionMapping, diagramTitleMapping } from '@/app/api/data/diagram-fields'
@@ -9,42 +9,6 @@ import { sessionInstructions } from '@/app/api/data/session-instruction'
 import { CCDResult, CCDTruth } from '@/lib/types'
 import { getCCDResult, getCCDTruth, saveCCDResult, saveCCDTruth } from '@/app/actions'
 import { PatientProfile, initialProfile } from '@/app/api/data/patient-profiles'
-
-
-// Before
-async function fetchPatientProfile(
-    setPatientProfile: (patientProfile: PatientProfile) => void) {
-    try {
-        fetch('/api/profile')
-            .then(response => response.json()
-                .then(data => {
-                    setPatientProfile(data.profile);
-                })
-            ).catch(error => {
-                console.log(error);
-            });
-    } catch (error) {
-        console.log("error fetching patient profile");
-    }
-}
-
-
-async function fetchPatientType(
-    userId: string,
-    chatId: string,
-    setPatientType: (patientType: string) => void) {
-    try {
-        fetch(`/api/type?userId=${userId}&chatId=${chatId}`)
-            .then(response => response.json()
-                .then(data => { setPatientType(data.type) })
-            ).catch(error => {
-                console.log(error);
-            });
-    } catch (error) {
-        console.log("error fetching patient type");
-    }
-
-}
 
 
 interface DiagramListProps {
@@ -68,6 +32,8 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
     const [savedCCDResult, setSavedCCDResult] = useState<CCDResult | null>(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [patientType, setPatientType] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
     const initialInputValues: InputValues = {
         ...Object.fromEntries([...diagramRelated, ...diagramCCD].map(name => [name, ''])),
         checkedHelpless: [],
@@ -77,25 +43,30 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
     };
 
     const [inputValues, setInputValues] = useState<InputValues>(initialInputValues);
-    const [isLoading, setIsLoading] = useState(true);
 
+    const fetchPatientProfile = useCallback(async () => {
+        try {
+            const response = await fetch('/api/profile');
+            const data = await response.json();
+            setPatientProfile(data.profile);
+            setIsFetchedPatientProfile(true);
+        } catch (error) {
+            console.log("error fetching patient profile");
+        }
+    }, []);
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            if (!isFetchedPatientProfile) {
-                await fetchPatientProfile(setPatientProfile);
-                await fetchPatientType(userId, chatId, setPatientType);
-                setIsFetchedPatientProfile(true);
-            }
-        };
+    const fetchPatientType = useCallback(async () => {
+        try {
+            const response = await fetch(`/api/type?userId=${userId}&chatId=${chatId}`);
+            const data = await response.json();
+            setPatientType(data.type);
+        } catch (error) {
+            console.log("error fetching patient type");
+        }
+    }, [userId, chatId]);
 
-        fetchProfile();
-    }, [isFetchedPatientProfile]);
-
-
-    useEffect(() => {
-        const fetchSavedCCDResult = async () => {
-            setIsLoading(true);
+    const fetchCCDResult = useCallback(async () => {
+        try {
             const savedResult = await getCCDResult(userId, chatId);
             if (savedResult) {
                 setSavedCCDResult(savedResult);
@@ -106,32 +77,16 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                 console.log("show previous ccdresult");
             }
             setIsLoading(false);
-        };
-
-        fetchSavedCCDResult();
+        } catch (error) {
+            console.error('Error fetching CCD result:', error);
+            setIsLoading(false);
+        }
     }, [userId, chatId]);
 
-
-    useEffect(() => {
-        const fetchProfile = async () => {
-            if (!isFetchedPatientProfile) {
-                await fetchPatientProfile(setPatientProfile);
-                setIsFetchedPatientProfile(true);
-            }
-        };
-
-        fetchProfile();
-    }, [isFetchedPatientProfile]);
-
-
-    useEffect(() => {
-        // Check if ccdTruth already exists in KV database
-        const fetchCCDTruth = async () => {
+    const fetchCCDTruth = useCallback(async () => {
+        try {
             const existingCCDTruth = await getCCDTruth(userId, chatId);
-            console.log(userId, chatId);
-
             if (!existingCCDTruth) {
-                // If ccdTruth is not in database, save ccdTruth according to current patientProfile
                 const ccdTruth: CCDTruth = {
                     userId: userId,
                     chatId: chatId,
@@ -155,11 +110,37 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
                 setSavedCCDTruth(existingCCDTruth);
                 console.log('CCD truth already in KV database');
             }
+        } catch (error) {
+            console.error('Error fetching CCD truth:', error);
+        }
+    }, [userId, chatId, patientProfile]);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            if (!isFetchedPatientProfile) {
+                await fetchPatientProfile();
+                await fetchPatientType();
+                setIsFetchedPatientProfile(true);
+            }
         };
 
-        fetchCCDTruth();
-    }, [userId, chatId, patientProfile])
+        fetchProfile();
+    }, [isFetchedPatientProfile, fetchPatientProfile, fetchPatientType]);
 
+    useEffect(() => {
+        fetchCCDResult();
+    }, [userId, chatId, fetchCCDResult]);
+
+    useEffect(() => {
+        if (!isFetchedPatientProfile) {
+            fetchPatientProfile();
+            setIsFetchedPatientProfile(true);
+        }
+    }, [isFetchedPatientProfile, fetchPatientProfile]);
+
+    useEffect(() => {
+        fetchCCDTruth();
+    }, [userId, chatId, patientProfile, fetchCCDTruth]);
 
     if (isLoading) {
         return <div>Loading...</div>;  // or any loading indicator
@@ -179,7 +160,6 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
             [`checked${category}`]: checkedValues,
         }));
     };
-
 
     const handleSubmit = async () => {
         try {
@@ -330,4 +310,3 @@ export function DiagramList({ userId, chatId }: DiagramListProps) {
         </div>
     );
 }
-

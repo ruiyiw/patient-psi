@@ -179,7 +179,7 @@ function IconArrowRight({ className, ...props }: React.ComponentProps<'svg'>) {
       className={cn('size-4', className)}
       {...props}
     >
-      <path d="m221.66 133.66-72 72a8 8 0 0 1-11.32-11.32L196.69 136H40a8 8 0 0 1 0-16h156.69l-58.35-58.34a8 8 0 0 1 11.32-11.32l72 72a8 8 0 0 1 0 11.32Z" />
+      <path d="m221.66 133.66-72 72a8 8 0 0 1-11.32-11.32L196.69 136H40a8 8 0 0 0 0-16h156.69l-58.35-58.34a8 8 0 0 1 11.32-11.32l72 72a8 8 0 0 1 0 11.32Z" />
     </svg>
   )
 }
@@ -221,7 +221,7 @@ function IconArrowElbow({ className, ...props }: React.ComponentProps<'svg'>) {
       className={cn('size-4', className)}
       {...props}
     >
-      <path d="M200 32v144a8 8 0 0 1-8 8H67.31l34.35 34.34a8 8 0 0 1-11.32 11.32l-48-48a8 8 0 0 1 0-11.32l48-48a8 8 0 0 1 11.32 11.32L67.31 168H184V32a8 8 0 0 1 16 0Z" />
+      <path d="M200 32v144a8 8 0 0 1-8 8H67.31l34.35 34.34a8 8 0 0 1-11.32 11.32l-48-48a8 8 0 0 1 0-11.32l48-48a8 8 0 0 1 11.32-11.32L67.31 168H184V32a8 8 0 0 1 16 0Z" />
     </svg>
   )
 }
@@ -476,9 +476,24 @@ function IconChevronUpDown({
   )
 }
 
+function IconAIAssistant({ className, ...props }: React.ComponentProps<'svg'>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={cn('size-4', className)}
+      {...props}
+    >
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+    </svg>
+  )
+}
+
 export {
   IconEdit,
   IconNextChat,
+  IconAIAssistant,
   IconOpenAI,
   IconVercel,
   IconGitHub,

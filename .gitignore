@@ -37,9 +37,9 @@ yarn-error.log*
 .vscode
 .env*.local
 *.json
-!profiles.json
-!.env.example
-!python/.env
+profiles.json
+.env.example
+python/.env
 
 
 # cache

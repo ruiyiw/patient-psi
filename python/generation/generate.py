@@ -1,5 +1,5 @@
 from langchain_core.output_parsers import PydanticOutputParser
-from langchain_openai import ChatOpenAI
+from langchain_community.llms import Ollama
 from generation.generation_template import GenerationModel
 from dotenv import load_dotenv
 import os
@@ -42,10 +42,10 @@ def generate_chain(transcript_file, out_file):
         "query": query,
         "format_instructions": pydantic_parser.get_format_instructions()
     })
-    llm = ChatOpenAI(
+    llm = Ollama(
         model=os.getenv('GENERATOR_MODEL'),
-        temperature=os.getenv('GENERATOR_MODEL_TEMP'),
-        max_retries=2,
+        temperature=float(os.getenv('GENERATOR_MODEL_TEMP')),
+        base_url=os.getenv('OLLAMA_API_BASE')
     )
     attempts = 0
 
